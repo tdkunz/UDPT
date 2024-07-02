@@ -8,12 +8,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import { AuthProvider } from './services/auth.jsx';
+import { CheckInProvider } from './services/CheckInProvider.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <React.StrictMode>
       <AuthProvider>
-        <App />
+        <CheckInProvider>
+          <App />
+        </CheckInProvider>
       </AuthProvider>
     </React.StrictMode>
   </BrowserRouter>

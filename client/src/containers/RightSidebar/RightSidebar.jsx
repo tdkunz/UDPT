@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { CheckInContext } from '../../services/CheckInProvider';
 import { Button } from 'react-bootstrap';
 
 import './RightSidebar.scss'
 
 const RightSidebar = () => {
     const [currentDate, setCurrentDate] = useState('');
-    const [checkInTime, setCheckInTime] = useState('');
+    const { checkInTime, setCheckInTime } = useContext(CheckInContext);
     const [checkOutTime, setCheckOutTime] = useState('');
 
     useEffect(() => {
@@ -27,8 +28,10 @@ const RightSidebar = () => {
     };
 
     const handleCheckIn = () => {
-        const timeString = getCurrentTime();
-        setCheckInTime(timeString);
+        if (!checkInTime) {
+            const timeString = getCurrentTime();
+            setCheckInTime(timeString);
+        }
     };
 
     const handleCheckOut = () => {
