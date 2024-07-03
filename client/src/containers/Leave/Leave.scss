@@ -33,11 +33,19 @@
             align-items: center;
             font-size: 16px;
             margin-bottom: 30px;
+
+            .container {
+                padding: 0 !important;
+            }
     
             .custom-datepick {
-                height: 30px;
                 font-size: 16px !important;
                 // margin-right: 5px;
+            }
+
+            .form-control-lg {
+                min-height: auto !important;
+                padding: .375rem .75rem !important;
             }
         }
 

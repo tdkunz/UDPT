@@ -1,12 +1,158 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Form, Button } from "react-bootstrap";
 
 import Header from '../Header/Header';
+import RightSidebar from '../RightSidebar/RightSidebar';
+import AddNewTimeSheet from './AddNewTimeSheet';
+import './UpdateTimeSheet.scss';
 
 const UpdateTimeSheet = () => {
+  const [isOpenAdd, setIsOpenAdd] = useState(false);
+
+  const handleShowAdd = () => {
+    setIsOpenAdd(true);
+  }
+
+  const handleCloseAdd = () => {
+    setIsOpenAdd(false);
+  }
+
+  const handleConfirmAdd = () => {
+    handleCloseAdd()
+  }
+
   return (
     <React.Fragment>
       <Header />
-      Update Time-sheet
+      <section>
+        <div className='update-timesheet-frame'>
+          <div className="d-flex align-items-center m-3 update-timesheet-header">
+            <div className="col-md-6">
+              <div className="mb-3">
+                  <h5 className="card-title">Contact List</h5>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                <Button onClick={handleShowAdd}>Thêm mới</Button>
+              </div>
+            </div>
+          </div>
+          <div className="list-frame">
+            <div className="col-lg-12">
+              <div className="update-timesheet-history">
+                <table className="table project-list-table table-nowrap align-middle table-borderless">
+                  <thead className='sticky-header'>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Work-start</th>
+                      <th scope="col">Work-end</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>03/07/2024</td>
+                      <td>8:00</td>
+                      <td>17:00</td>
+                      <td>
+                        <span class="badge badge-soft-success mb-0">
+                          Đã duyệt
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <RightSidebar/>
+      </section>
+      <AddNewTimeSheet show = {isOpenAdd}
+                      handleClose = {handleCloseAdd}
+                      handleConfirm = {handleConfirmAdd}
+      />
     </React.Fragment>
   );
 }
