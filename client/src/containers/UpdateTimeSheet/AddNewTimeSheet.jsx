@@ -15,7 +15,7 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
     return (
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Thêm thời gian làm việcc</Modal.Title>
+            <Modal.Title>Thêm thời gian làm việc</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>
