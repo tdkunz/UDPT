@@ -5,6 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import DetailLeave from './DetailLeave';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
@@ -14,6 +15,20 @@ const Leave = () => {
   const [leaveMethod, setLeaveMethod] = useState('oneday');
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
+
+  const [isOpenDetail, setIsOpenDetail] = useState(false);
+
+  const handleShowDetail = () => {
+    setIsOpenDetail(true);
+  }
+
+  const handleCloseDetail = () => {
+    setIsOpenDetail(false);
+  }
+
+  const handleConfirmDetail = () => {
+    handleCloseDetail()
+  }
 
   return (
     <React.Fragment>
@@ -37,8 +52,67 @@ const Leave = () => {
                   Nghỉ nhiều ngày
                 </label>
               </div>
+              <div className="form-check">
+                <input className="form-check-input" type="radio" id="leaveList"
+                        onClick={() => setLeaveMethod('leaveList')}
+                        checked={leaveMethod === 'leaveList'}/>
+                <label className="form-check-label" for="leaveList">
+                  Lịch sử xin nghỉ
+                </label>
+              </div>
             </div>
-            <div className='datepick-frame'>
+            <div className={`list-frame-leave ${leaveMethod === 'leaveList' ? '' : 'd-none'}`}>
+              <div className="col-lg-12">
+                <div className="leave-history">
+                  <table className="table leave-table table-nowrap align-middle table-borderless">
+                    <thead className='sticky-header'>
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Nghỉ từ ngày</th>
+                        <th scope="col">Đến hết ngày</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Chi tiết</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>26/07/2024</td>
+                        <td>26/07/2024</td>
+                        <td>
+                          <span className="badge badge-soft-success mb-0">
+                            Đã duyệt
+                          </span>
+                        </td>
+                        <td>
+                          <span className='text-decoration-underline detail'
+                                onClick={handleShowDetail}>
+                            Xem thêm
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>26/07/2024</td>
+                        <td>26/07/2024</td>
+                        <td>
+                          <span className="badge badge-soft-danger mb-0">
+                            Từ chối
+                          </span>
+                        </td>
+                        <td>
+                          <span className='text-decoration-underline detail'
+                                onClick={handleShowDetail}>
+                            Xem thêm
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div className={`datepick-frame ${leaveMethod !== 'leaveList' ? '' : 'd-none'}`}>
               <div className='datepick'>  
                 <label className='col-sm-3 col-form-label'>Họ tên:</label>
                 <Container>
@@ -127,6 +201,10 @@ const Leave = () => {
           </div>
           <RightSidebar/>
         </section>
+        <DetailLeave show = {isOpenDetail}
+                      handleClose = {handleCloseDetail}
+                      handleConfirm = {handleConfirmDetail}
+        />
     </React.Fragment>
   );
 }

@@ -46,3 +46,42 @@ section {
   justify-content: space-between;
   background-color: rgb(228, 228, 228);
 }
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.table-nowrap td, .table-nowrap th {
+  white-space: nowrap;
+}
+.table-borderless>:not(caption)>*>* {
+  border-bottom-width: 0;
+}
+.table>:not(caption)>*>* {
+  padding: 0.75rem 0.75rem;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: 1px;
+  box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+
+.badge-soft-danger {
+  color: #f56e6e !important;
+  background-color: rgba(245,110,110,.1);
+}
+.badge-soft-success {
+  color: #63ad6f !important;
+  background-color: rgba(99,173,111,.1);
+}
+
+.detail {
+  font-size: 14px;
+  color: rgb(0, 0, 255);
+  font-weight: 600;
+
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}
