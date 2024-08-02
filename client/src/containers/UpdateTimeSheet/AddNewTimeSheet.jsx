@@ -23,15 +23,16 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
                 <Form.Label>Họ tên:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Họ tên"
-                    autoFocus
+                    value={"Nguyễn Văn A"}
+                    disabled
                 />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                 <Form.Label>Bộ phận:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Bộ phận làm việc"
+                    value={"Phòng kế toán"}
+                    disabled
                 />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">

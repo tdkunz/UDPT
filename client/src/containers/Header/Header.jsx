@@ -36,6 +36,9 @@ const Header = () => {
             <NavLink to = '/work-from-home' className='child-content'>
                 Work from home
             </NavLink>
+            <NavLink to = '/approve' className='child-content'>
+                Approve
+            </NavLink>
         </div>
     </header>
   );

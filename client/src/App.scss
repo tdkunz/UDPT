@@ -74,6 +74,11 @@ section {
   color: #63ad6f !important;
   background-color: rgba(99,173,111,.1);
 }
+.badge-soft-warning {
+  color: #ffc107 !important;
+  background-color: rgba(160,173,99,.1);
+}
+
 
 .detail {
   font-size: 14px;
@@ -84,4 +89,11 @@ section {
     opacity: 0.8;
     cursor: pointer;
   }
+}
+
+.content-frame {
+  width: 75%;
+  margin: 20px;
+  background-color: white;
+  border-radius: 10px;
 }

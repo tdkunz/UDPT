@@ -18,7 +18,7 @@ const WorkFromHome = () => {
     <React.Fragment>
       <Header />
       <section>
-        <div className='wfh-frame'>
+        <div className='content-frame'>
           <div className="d-flex align-items-center justify-content-center m-3 wfh-header">
             <div className="mb-3">
                 <h5 className="card-title">Work From Home Form</h5>
@@ -31,22 +31,24 @@ const WorkFromHome = () => {
                   <Form.Label className='fw-bold'>Họ tên:</Form.Label>
                   <Form.Control
                       type="text"
-                      placeholder="Họ tên"
-                      autoFocus
+                      value={"Nguyễn Văn A"}
+                      disabled
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label className='fw-bold'>Bộ phận:</Form.Label>
                   <Form.Control
                       type="text"
-                      placeholder="Bộ phận làm việc"
+                      value={"Phòng kế toán"}
+                      disabled
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label className='fw-bold'>Số điện thoại:</Form.Label>
                   <Form.Control
                       type="text"
-                      placeholder="Số điện thoại liên lạc"
+                      value={"0123456789"}
+                      disabled
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">

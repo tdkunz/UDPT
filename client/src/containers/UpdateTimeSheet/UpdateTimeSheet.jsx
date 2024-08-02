@@ -39,11 +39,11 @@ const UpdateTimeSheet = () => {
     <React.Fragment>
       <Header />
       <section>
-        <div className='update-timesheet-frame'>
+        <div className='content-frame'>
           <div className="d-flex align-items-center m-3 update-timesheet-header">
             <div className="col-md-6">
               <div className="mb-3">
-                  <h5 className="card-title">Contact List</h5>
+                  <h5 className="card-title">Update Time-sheet List</h5>
               </div>
             </div>
             <div className="col-md-6">

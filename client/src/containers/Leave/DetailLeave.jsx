@@ -10,7 +10,7 @@ export function DetailLeave({show, handleClose, handleConfirm}) {
     return (
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-            <Modal.Title>Thêm thời gian làm việc</Modal.Title>
+            <Modal.Title>Đơn xin nghỉ</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <Form>

@@ -18,7 +18,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Mã nhân viên:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="123"
+                    value={"123"}
                     autoFocus
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
@@ -28,7 +28,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Họ tên:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Nguyễn Văn A"
+                    value={"Nguyễn Văn A"}
                     autoFocus
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
@@ -38,7 +38,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Bộ phận:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="Bộ phận làm việc"
+                    value={"Phòng kế toán"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -47,7 +47,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Cập nhật ngày:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="26/07/2024"
+                    value={"26/07/2024"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -56,7 +56,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Bắt đầu:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="8:00"
+                    value={"08:00"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -65,7 +65,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Kết thúc:</Form.Label>
                 <Form.Control
                     type="text"
-                    placeholder="17:00"
+                    value={"17:00"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -74,7 +74,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Lý do từ chối:</Form.Label>
                 <Form.Control
                     as="textarea"
-                    placeholder="abc"
+                    value={"abc"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />

@@ -34,7 +34,7 @@ const Leave = () => {
     <React.Fragment>
         <Header />
         <section>
-          <div className='leave-frame'>
+          <div className='content-frame'>
             <div className='leave-check'>
               <div className="form-check">
                 <input className="form-check-input" type="radio" id="oneday"
@@ -118,11 +118,9 @@ const Leave = () => {
                 <Container>
                     <Row>
                         <Form.Group>
-                            <Form.Control type='text' placeholder='Họ tên nhân viên'
-                                          name='phoneNumber'
-                                          // value={formLookupInvoice.phoneNumber}
-                                          // onChange={handleChange}
-                                          required
+                            <Form.Control type='text'
+                                          value={"Nguyễn Văn A"}
+                                          disabled
                             ></Form.Control>
                         </Form.Group>
                     </Row>
@@ -133,11 +131,9 @@ const Leave = () => {
                 <Container>
                     <Row>
                         <Form.Group>
-                            <Form.Control type='text' placeholder='Bộ phận làm việc'
-                                          name='phoneNumber'
-                                          // value={formLookupInvoice.phoneNumber}
-                                          // onChange={handleChange}
-                                          required
+                            <Form.Control type='text'
+                                          value={"Phòng kế toán"}
+                                          disabled
                             ></Form.Control>
                         </Form.Group>
                     </Row>
@@ -148,11 +144,9 @@ const Leave = () => {
                 <Container>
                     <Row>
                         <Form.Group>
-                            <Form.Control type='text' placeholder='Số điện thoại liên lạc'
-                                          name='phoneNumber'
-                                          // value={formLookupInvoice.phoneNumber}
-                                          // onChange={handleChange}
-                                          required
+                            <Form.Control type='text'
+                                          value={"0123456789"}
+                                          disabled
                             ></Form.Control>
                         </Form.Group>
                     </Row>
