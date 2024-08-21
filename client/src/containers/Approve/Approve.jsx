@@ -5,6 +5,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
+import Footer from '../Footer/Footer';
 import RequestDetail from './Request_Detail';
 import "./Approve.scss";
 import "../UpdateTimeSheet/UpdateTimeSheet.scss";
@@ -129,6 +130,7 @@ const Approve = () => {
                 </div>
                 <RightSidebar />
            </section>
+           <Footer />
            <RequestDetail show = {isOpenDetail}
                       handleClose = {handleCloseDetail}
                       handleConfirm = {handleConfirmDetail}

@@ -6,6 +6,7 @@ import Leave from './containers/Leave/Leave';
 import UpdateTimeSheet from './containers/UpdateTimeSheet/UpdateTimeSheet' ;
 import WorkFromHome from './containers/WorkFromHome/WorkFromHome';
 import Approve from './containers/Approve/Approve';
+import Activities from './containers/Activities/Activities';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/update-time-sheet" element={<UpdateTimeSheet />} />
       <Route path="/work-from-home" element={<WorkFromHome />} />
       <Route path="/approve" element={<Approve />} />
+      <Route path="/activities" element={<Activities />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

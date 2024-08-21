@@ -9,6 +9,7 @@ import DetailLeave from './DetailLeave';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
+import Footer from '../Footer/Footer';
 import './Leave.scss';
 
 const Leave = () => {
@@ -195,6 +196,7 @@ const Leave = () => {
           </div>
           <RightSidebar/>
         </section>
+        <Footer />
         <DetailLeave show = {isOpenDetail}
                       handleClose = {handleCloseDetail}
                       handleConfirm = {handleConfirmDetail}

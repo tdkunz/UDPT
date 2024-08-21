@@ -39,6 +39,9 @@ const Header = () => {
             <NavLink to = '/approve' className='child-content'>
                 Approve
             </NavLink>
+            <NavLink to = '/activities' className='child-content'>
+                Activities
+            </NavLink>
         </div>
     </header>
   );

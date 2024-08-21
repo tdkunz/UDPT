@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
+import Footer from '../Footer/Footer';
 import AddNewTimeSheet from './AddNewTimeSheet';
 import DetailUpdate from './DetailUpdate';
 import './UpdateTimeSheet.scss';
@@ -90,6 +91,7 @@ const UpdateTimeSheet = () => {
         </div>
         <RightSidebar/>
       </section>
+      <Footer />
       <AddNewTimeSheet show = {isOpenAdd}
                       handleClose = {handleCloseAdd}
                       handleConfirm = {handleConfirmAdd}

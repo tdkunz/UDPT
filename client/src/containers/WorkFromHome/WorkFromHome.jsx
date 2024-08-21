@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
+import Footer from '../Footer/Footer';
 import './WorkFromHome.scss';
 
 const WorkFromHome = () => {
@@ -94,6 +95,7 @@ const WorkFromHome = () => {
         </div>
         <RightSidebar />
       </section>
+      <Footer />
     </React.Fragment>
   );
 }
