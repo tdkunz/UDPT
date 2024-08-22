@@ -12,8 +12,71 @@ import './WorkFromHome.scss';
 
 const WorkFromHome = () => {
   const today = new Date();
-  const [selectedDate, setSelectedDate] = useState(today);
-  const [equipment, setEquipment] = useState('yes');
+  today.setHours(0, 0, 0, 0);
+
+  const [errorTimeStart, setErrorTimeStart] = useState('');
+  const [equipment, setEquipment] = useState(false);
+
+  const [wfhData, setWFHData] = useState({
+    time_start: today,
+    time_end: today,
+    reason: '',
+    equipmentList: ''
+  });
+
+  const formatDateTime = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  const wfhInfo = {
+    "Họ tên": "Nguyễn Văn A",
+    "Bộ phận": "Phòng kế toán",
+    "Phone": "0123456789",
+    "time_start": formatDateTime(new Date(wfhData.time_start)),
+    "time_end": formatDateTime(new Date(wfhData.time_end)),
+    "Lý do": wfhData.reason,
+    "Yêu cầu thiết bị": equipment,
+    "Danh sách thiết bị": wfhData.equipmentList
+  }
+
+  const handleDateChange = (date, name) => {
+    const startDate = new Date(date);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(date);
+    endDate.setHours(23, 59, 59, 999);
+
+    setWFHData({
+      ...wfhData,
+      time_start: startDate,
+      time_end: endDate
+    });
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setWFHData({
+        ...wfhData,
+        [name]: value
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const timeStart = new Date(wfhData.time_start);
+    setErrorTimeStart('');
+    if (timeStart < today) {
+      setErrorTimeStart('Ngày không được nhỏ hơn ngày hiện tại.');
+      return;
+    }
+    console.log("WFH Info: ", wfhInfo);
+  };
 
   return (
     <React.Fragment>
@@ -25,73 +88,100 @@ const WorkFromHome = () => {
                 <h5 className="card-title">Work From Home Form</h5>
             </div>
           </div>
-          <div className='wfh-info'>
-            <div className='wfh-info-content'>
-              <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label className='fw-bold'>Họ tên:</Form.Label>
-                  <Form.Control
-                      type="text"
-                      value={"Nguyễn Văn A"}
-                      disabled
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label className='fw-bold'>Bộ phận:</Form.Label>
-                  <Form.Control
-                      type="text"
-                      value={"Phòng kế toán"}
-                      disabled
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label className='fw-bold'>Số điện thoại:</Form.Label>
-                  <Form.Control
-                      type="text"
-                      value={"0123456789"}
-                      disabled
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label className="row fw-bold">Ngày:</Form.Label>
-                  <DatePicker
-                      selected={selectedDate}
-                      onChange={(date) => setSelectedDate(date)}
-                      dateFormat="dd/MM/yyyy"
-                      className="form-control"
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label className="row fw-bold">Lý do:</Form.Label>
-                  <textarea className="form-control" id="reason" rows="3"></textarea>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label className="row fw-bold">Thiết bị:</Form.Label>
-                  <div className='mb-2'>
-                    <input className="form-check-input me-2" type="radio" id="yes"
-                          onClick={() => setEquipment('yes')}
-                          checked={equipment === 'yes'}/>
-                    <label className="form-check-label" for="yes" onClick={() => setEquipment('yes')}>
-                      Tôi đã có thiết bị đáp ứng nhu cầu công việc
-                    </label>
-                  </div>
-                  <div className='mt-2'>
-                    <input className="form-check-input me-2" type="radio" id="no"
-                          onClick={() => setEquipment('no')}
-                          checked={equipment === 'no'}/>
-                    <label className="form-check-label" for="no">
-                      Tôi cần công ty hỗ trợ thiết bị
-                    </label>
-                  </div>
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label className="row fw-bold">Loại thiết bị bạn cần cho công việc làm tại nhà:</Form.Label>
-                  <textarea className="form-control" id="reason" rows="3"></textarea>
-                </Form.Group>
-              </Form>
-              <Button>Gửi</Button>
-            </div>
+          <form action="#" onSubmit={(e) => handleSubmit(e)}>
+            <div className='wfh-info'>
+              <div className='wfh-info-content'>
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Form.Label className='fw-bold'>Họ tên:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={"Nguyễn Văn A"}
+                        disabled
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className='fw-bold'>Bộ phận:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={"Phòng kế toán"}
+                        disabled
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className='fw-bold'>Số điện thoại:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={"0123456789"}
+                        disabled
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="row fw-bold">Ngày:</Form.Label>
+                    <DatePicker
+                        name = 'time_start'
+                        selected={wfhData.time_start}
+                        onChange={(date) => handleDateChange(date, 'time_start')}
+                        dateFormat="dd/MM/yyyy"
+                        className="form-control"
+                        required
+                    />
+                    {errorTimeStart && <div className="text-danger mx-3">{errorTimeStart}</div>}
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="row fw-bold">Lý do:</Form.Label>
+                    <Form.Control
+                      name = 'reason'
+                      as="textarea"
+                      rows="3"
+                      placeholder="Lý do"
+                      onChange={handleChange}
+                      required
+                      style={{ backgroundColor: '#fff', color: '#000' }}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="row fw-bold">Thiết bị:</Form.Label>
+                    <div className='mb-2'>
+                      <input className="form-check-input me-2" type="radio" id="false"
+                            onClick={() => setEquipment(false)}
+                            checked={equipment === false}/>
+                      <label className="form-check-label" htmlFor = "false" onClick={() => setEquipment(false)}>
+                        Tôi đã có thiết bị đáp ứng nhu cầu công việc
+                      </label>
+                    </div>
+                    <div className='mt-2'>
+                      <input className="form-check-input me-2" type="radio" id="true"
+                            onClick={() => setEquipment(true)}
+                            checked={equipment === true}/>
+                      <label className="form-check-label" htmlFor = "true">
+                        Tôi cần công ty hỗ trợ thiết bị
+                      </label>
+                    </div>
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label className="row fw-bold">Loại thiết bị bạn cần cho công việc làm tại nhà:</Form.Label>
+                    <Form.Control
+                      name = 'equipmentList'
+                      as="textarea"
+                      rows="3"
+                      placeholder="Danh sách thiết bị (các thiết bị ngăn cách bởi dấu ,)"
+                      onChange={handleChange}
+                      disabled={!equipment}
+                      required
+                      // style={{ backgroundColor: '#fff', color: '#000' }}
+                      style={{
+                        backgroundColor: equipment ? '#fff' : '',
+                        color: equipment ? '#000' : '#888',
+                        cursor: equipment ? 'text' : 'not-allowed'
+                      }}
+                    />
+                  </Form.Group>
+                </Form>
+                <Button type='submit'>Gửi</Button>
+              </div>
           </div>
+        </form>
         </div>
         <RightSidebar />
       </section>
