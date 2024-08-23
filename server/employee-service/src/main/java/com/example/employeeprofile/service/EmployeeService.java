@@ -3,6 +3,7 @@ package com.example.employeeprofile.service;
 import com.example.employeeprofile.dto.EmployeeDTO;
 import com.example.employeeprofile.model.Employee;
 import com.example.employeeprofile.repository.EmployeeRepository;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

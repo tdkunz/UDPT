@@ -1,5 +1,6 @@
 package com.example.employeeprofile.dto;
 
+import com.example.employeeprofile.model.EmployeeId;
 import lombok.Getter;
 import lombok.Setter;
 

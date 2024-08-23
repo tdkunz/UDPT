@@ -5,7 +5,9 @@ import com.example.employeeprofile.model.Employee;
 import com.example.employeeprofile.model.User;
 import com.example.employeeprofile.repository.UserRepository;
 import com.example.employeeprofile.repository.EmployeeRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,15 +50,7 @@ public class UserService {
         userRepository.deleteById(username);
     }
 
-    private UserDTO convertToDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername(user.getUsername());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setEmployeeId(user.getEmployee().getEmployeeId());
-        userDTO.setRole(user.getRole());
-        userDTO.setStatus(user.getStatus());
-        return userDTO;
-    }
+
 
     private User convertToEntity(UserDTO userDTO) {
         User user = new User();
@@ -69,4 +63,15 @@ public class UserService {
         user.setEmployee(employee);
         return user;
     }
+
+    private UserDTO convertToDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(user.getUsername());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setEmployeeId(user.getEmployee().getEmployeeId());
+        userDTO.setRole(user.getRole());
+        userDTO.setStatus(user.getStatus());
+        return userDTO;
+    }
+
 }
