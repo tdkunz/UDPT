@@ -1,32 +1,30 @@
 package com.example.employeeprofile.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@IdClass(EmployeeId.class)
 public class Employee {
     @Id
-    @Column(name = "employeeId")
-    private Long employeeId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uId;
 
-    @Id
-    @Column(name = "identifyId")
+    @Column(unique = true)
     private String identifyId;
 
     private String name;
     private String gender;
     private String taxNumber;
-    private String address;
-    private String phoneNumber;
-    private String bankNumber;
+    private String address = "";
+    private String phoneNumber = "";
+    private String bankNumber = "";
     private String position;
     private String department;
     private String status;
+
+    @Column(unique = true)
+    private String username;
 }

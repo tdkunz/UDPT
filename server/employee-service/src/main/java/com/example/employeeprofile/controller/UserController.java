@@ -1,7 +1,9 @@
 package com.example.employeeprofile.controller;
 
 import com.example.employeeprofile.dto.UserDTO;
+import com.example.employeeprofile.dto.EmployeeDTO;
 import com.example.employeeprofile.service.UserService;
+import com.example.employeeprofile.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        // Create Employee
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setIdentifyId(userDTO.getIdentifyId());
+        employeeDTO.setName(userDTO.getName());
+        employeeDTO.setUsername(userDTO.getUsername());
+        // Set other fields as needed
+
+        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+
+        // Create User
         UserDTO createdUser = userService.createUser(userDTO);
+
         return ResponseEntity.ok(createdUser);
     }
 

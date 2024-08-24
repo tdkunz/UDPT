@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,16 +28,31 @@ public class UserService {
     }
 
     public UserDTO createUser(UserDTO userDTO) {
-        User user = convertToEntity(userDTO);
-        return convertToDTO(userRepository.save(user));
+        String generatedPassword = RandomStringUtils.random(8, true, true);
+        System.out.println("Generated password: " + generatedPassword);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(generatedPassword);
+        userDTO.setPassword(hashedPassword);
+
+        Optional<Employee> employeeOptional = employeeRepository.findByUsername(userDTO.getUsername());
+        if (employeeOptional.isPresent()) {
+            User user = convertToEntity(userDTO);
+            user.setEmployee(employeeOptional.get());
+            return convertToDTO(userRepository.save(user));
+        } else {
+            // Continue to create the User without linking to an Employee
+            User user = convertToEntity(userDTO);
+            return convertToDTO(userRepository.save(user));
+        }
     }
 
     public UserDTO getUserByUsername(String username) {
-        return userRepository.findById(username).map(this::convertToDTO).orElse(null);
+        return userRepository.findById(Long.valueOf(username)).map(this::convertToDTO).orElse(null);
     }
 
     public UserDTO updateUser(String username, UserDTO userDTO) {
-        User existingUser = userRepository.findById(username).orElse(null);
+        User existingUser = userRepository.findById(Long.valueOf(username)).orElse(null);
         if (existingUser != null) {
             existingUser.setPassword(userDTO.getPassword());
             existingUser.setRole(userDTO.getRole());
@@ -47,10 +63,8 @@ public class UserService {
     }
 
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        userRepository.deleteById(Long.valueOf(username));
     }
-
-
 
     private User convertToEntity(UserDTO userDTO) {
         User user = new User();
@@ -58,9 +72,6 @@ public class UserService {
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());
         user.setStatus(userDTO.getStatus());
-        // Assuming you have a method to fetch Employee by ID
-        Employee employee = employeeRepository.findById(userDTO.getEmployeeId()).orElse(null);
-        user.setEmployee(employee);
         return user;
     }
 
@@ -68,10 +79,8 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
-        userDTO.setEmployeeId(user.getEmployee().getEmployeeId());
         userDTO.setRole(user.getRole());
         userDTO.setStatus(user.getStatus());
         return userDTO;
     }
-
 }

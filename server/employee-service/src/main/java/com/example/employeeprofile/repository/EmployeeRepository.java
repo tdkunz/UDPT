@@ -3,5 +3,9 @@ package com.example.employeeprofile.repository;
 import com.example.employeeprofile.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    boolean existsByIdentifyId(String identifyId);
+    Optional<Employee> findByUsername(String username); // Ensure this returns Optional<Employee>
 }

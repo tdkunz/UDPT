@@ -3,7 +3,6 @@ package com.example.employeeprofile.service;
 import com.example.employeeprofile.dto.EmployeeDTO;
 import com.example.employeeprofile.model.Employee;
 import com.example.employeeprofile.repository.EmployeeRepository;
-import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +20,9 @@ public class EmployeeService {
     }
 
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+//        if (employeeRepository.existsByIdentifyId(employeeDTO.getIdentifyId())) {
+//            throw new IllegalArgumentException("IdentifyId already exists");
+//        }
         Employee employee = convertToEntity(employeeDTO);
         return convertToDTO(employeeRepository.save(employee));
     }
@@ -53,7 +55,6 @@ public class EmployeeService {
 
     private EmployeeDTO convertToDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmployeeId(employee.getEmployeeId());
         employeeDTO.setIdentifyId(employee.getIdentifyId());
         employeeDTO.setName(employee.getName());
         employeeDTO.setGender(employee.getGender());
@@ -69,7 +70,6 @@ public class EmployeeService {
 
     private Employee convertToEntity(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        employee.setEmployeeId(employeeDTO.getEmployeeId());
         employee.setIdentifyId(employeeDTO.getIdentifyId());
         employee.setName(employeeDTO.getName());
         employee.setGender(employeeDTO.getGender());

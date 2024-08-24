@@ -1,17 +1,11 @@
 package com.example.employeeprofile.dto;
 
-import com.example.employeeprofile.model.EmployeeId;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class EmployeeDTO {
-    private Long employeeId;
     private String identifyId;
     private String name;
     private String gender;
@@ -23,4 +17,7 @@ public class EmployeeDTO {
     private String department;
     private String status;
 
+    public String setUsername(String  username) {
+        return username;
+    }
 }
