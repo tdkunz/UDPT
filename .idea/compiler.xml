@@ -2,17 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="server" />
-        <module name="employee-reward-service" />
         <module name="employee-request-service" />
         <module name="api-gateway" />
-        <module name="employee-profile-service" />
         <module name="employee-activity-service" />
+        <module name="reward-management-service" />
         <module name="eureka-server" />
+        <module name="employee-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -20,10 +21,10 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="employee-activity-service" options="-parameters" />
-      <module name="employee-profile-service" options="-parameters" />
       <module name="employee-request-service" options="-parameters" />
-      <module name="employee-reward-service" options="-parameters" />
+      <module name="employee-service" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
+      <module name="reward-management-service" options="-parameters" />
       <module name="server" options="-parameters" />
     </option>
   </component>
