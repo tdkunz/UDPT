@@ -8,16 +8,43 @@ import './Request_Detail.scss';
 export function RequestDetail({show, handleClose, handleConfirm}) {
 
     const [rejectionReason, setRejectionReason] = useState('');
+    const [accept, setAccept] = useState('Chưa duyệt');
     const [error, setError] = useState('');
+
+    const requestInfo = {
+        "Mã nhân viên": "123",
+        "Họ tên": "Nguyễn Văn A",
+        "Bộ phận": "Phòng kế toán",
+        "Phone": "0123456789",
+        "Loại yêu cầu": "Xin nghỉ",
+        "Tình trạng": accept,
+        "Time_start": "26/07/2024",
+        "Time_end": "26/07/2024",
+        "Lý do": "abc",
+        "Thiết bị yêu cầu": "abc",
+        "Lý do từ chối": rejectionReason
+    }
+
+    const handleSubmit = () => {
+        setAccept("Chấp thuận");
+        handleConfirm();
+    }
 
     const handleReject = () => {
         if (rejectionReason.trim() === '') {
             setError('Lý do từ chối không được để trống.');
         } else {
             setError('');
+            setAccept("Từ chối");
             handleClose();
         }
     };
+
+    useEffect(() => {
+        if (accept !== "Chưa duyệt") {
+            console.log("Request Info: ", requestInfo)
+        }
+    }, [accept]);
 
     return (
         <Modal show={show} onHide={handleClose} size='lg'>
@@ -34,7 +61,7 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                                 value={"123"}
                                 autoFocus
                                 disabled
-                                style={{ backgroundColor: '#fff', color: '#000' }}
+                                // style={{ backgroundColor: '#fff', color: '#000' }}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -44,7 +71,7 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                                 value={"Nguyễn Văn A"}
                                 autoFocus
                                 disabled
-                                style={{ backgroundColor: '#fff', color: '#000' }}
+                                // style={{ backgroundColor: '#fff', color: '#000' }}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -53,7 +80,16 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                                 type="text"
                                 value={"Phòng kế toán"}
                                 disabled
-                                style={{ backgroundColor: '#fff', color: '#000' }}
+                                // style={{ backgroundColor: '#fff', color: '#000' }}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+                            <Form.Label>Mã yêu cầu:</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={"123"}
+                                disabled
+                                // style={{ backgroundColor: '#fff', color: '#000' }}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -62,25 +98,24 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                                 type="text"
                                 value={"Xin nghỉ"}
                                 disabled
-                                style={{ backgroundColor: '#fff', color: '#000' }}
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                            <Form.Label>Ngày gửi:</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={"20/07/2024"}
-                                disabled
-                                style={{ backgroundColor: '#fff', color: '#000' }}
+                                // style={{ backgroundColor: '#fff', color: '#000' }}
                             />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                             <Form.Label>Trạng thái:</Form.Label>
                             <Form.Control
                                 type="text"
-                                value={"Chưa chấp nhận"}
+                                value={accept}
                                 disabled
-                                style={{ backgroundColor: 'rgba(160,173,99,.1)', color: '#ffc107' }}
+                                className={
+                                    accept === 'Chưa duyệt'
+                                      ? 'badge-soft-warning'
+                                      : accept === 'Chấp thuận'
+                                      ? 'badge-soft-success'
+                                      : accept === 'Từ chối'
+                                      ? 'badge-soft-danger'
+                                      : ''
+                                }
                             />
                         </Form.Group>
                     </Form>
@@ -132,7 +167,12 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                                 placeholder="Lý do từ chối"
                                 value={rejectionReason}
                                 onChange={(e) => setRejectionReason(e.target.value)}
-                                style={{ backgroundColor: '#fff', color: '#000' }}
+                                disabled={accept !== 'Chưa duyệt'}
+                                style={{
+                                    backgroundColor: accept !== 'Chưa duyệt' ? '' : '#fff',
+                                    color: accept !== 'Chưa duyệt' ? '#000' : '#888',
+                                    cursor: accept !== 'Chưa duyệt' ? 'not-allowed' : 'text'
+                                }}
                             />
                         </Form.Group>
                         {error && <div className="text-danger">{error}</div>}
@@ -143,10 +183,10 @@ export function RequestDetail({show, handleClose, handleConfirm}) {
                 <Button variant="secondary" onClick={handleClose}>
                     Thoát
                 </Button>
-                <Button variant="danger" onClick={handleReject}>
+                <Button variant="danger" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleReject}>
                     Từ chối
                 </Button>
-                <Button variant="primary" onClick={handleConfirm}>
+                <Button variant="primary" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleSubmit}>
                     Duyệt
                 </Button>
             </Modal.Footer>
