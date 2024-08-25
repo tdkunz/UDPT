@@ -10,7 +10,7 @@ import lombok.Setter;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uId;
+    private Long id;
 
     @Column(unique = true)
     private String username;
@@ -18,8 +18,4 @@ public class User {
     private String password;
     private String role;
     private String status;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "uId", referencedColumnName = "uId")
-    private Employee employee;
 }

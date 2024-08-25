@@ -15,16 +15,27 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    public boolean identifyIdExists(String identifyId) {
+        return employeeRepository.existsByIdentifyId(identifyId);
+    }
+
     public List<EmployeeDTO> getAllEmployees() {
         return employeeRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-//        if (employeeRepository.existsByIdentifyId(employeeDTO.getIdentifyId())) {
-//            throw new IllegalArgumentException("IdentifyId already exists");
-//        }
-        Employee employee = convertToEntity(employeeDTO);
-        return convertToDTO(employeeRepository.save(employee));
+        if (employeeDTO == null) {
+            throw new IllegalArgumentException("EmployeeDTO cannot be null");
+        }
+
+        boolean identifyIdExists = employeeRepository.existsByIdentifyId(employeeDTO.getIdentifyId());
+
+        if (identifyIdExists) {
+            throw new IllegalArgumentException("Identify ID already exists");
+        } else {
+            Employee employee = convertToEntity(employeeDTO);
+            return convertToDTO(employeeRepository.save(employee));
+        }
     }
 
     public EmployeeDTO getEmployeeById(Long id) {

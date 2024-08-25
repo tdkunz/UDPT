@@ -2,6 +2,8 @@ package com.example.employeeprofile.controller;
 
 import com.example.employeeprofile.dto.UserDTO;
 import com.example.employeeprofile.dto.EmployeeDTO;
+import com.example.employeeprofile.dto.UserEmployeeRequest;
+import com.example.employeeprofile.dto.UserEmployeeResponse;
 import com.example.employeeprofile.service.UserService;
 import com.example.employeeprofile.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +23,24 @@ public class UserController {
     private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        // Create Employee
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setIdentifyId(userDTO.getIdentifyId());
-        employeeDTO.setName(userDTO.getName());
-        employeeDTO.setUsername(userDTO.getUsername());
-        // Set other fields as needed
+    public ResponseEntity<String> createUser(@RequestBody UserEmployeeRequest request) {
+        // Check if username or identifyId exists
+        boolean usernameExists = userService.usernameExists(request.getUser().getUsername());
+        boolean identifyIdExists = employeeService.identifyIdExists(request.getEmployee().getIdentifyId());
 
-        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+        if (usernameExists || identifyIdExists) {
+            return ResponseEntity.badRequest().body("Username or Identify ID already exists");
+        }
 
         // Create User
-        UserDTO createdUser = userService.createUser(userDTO);
+        UserDTO createdUser = userService.createUser(request.getUser());
 
-        return ResponseEntity.ok(createdUser);
+        // Create Employee
+        EmployeeDTO createdEmployee = employeeService.createEmployee(request.getEmployee());
+
+        // Return combined response
+        UserEmployeeResponse response = new UserEmployeeResponse(createdUser, createdEmployee);
+        return ResponseEntity.ok(response.toString());
     }
 
     @GetMapping("/{username}")

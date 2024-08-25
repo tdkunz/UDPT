@@ -1,10 +1,8 @@
 package com.example.employeeprofile.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class EmployeeDTO {
     private String identifyId;
     private String name;
@@ -16,8 +14,4 @@ public class EmployeeDTO {
     private String position;
     private String department;
     private String status;
-
-    public String setUsername(String  username) {
-        return username;
-    }
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long uId;
+    private Long id;
 
     @Column(unique = true)
     private String identifyId;
@@ -18,13 +18,14 @@ public class Employee {
     private String name;
     private String gender;
     private String taxNumber;
-    private String address = "";
-    private String phoneNumber = "";
-    private String bankNumber = "";
+    private String address;
+    private String phoneNumber;
+    private String bankNumber;
     private String position;
     private String department;
     private String status;
 
-    @Column(unique = true)
-    private String username;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private User user;
 }

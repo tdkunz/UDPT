@@ -23,11 +23,18 @@ public class UserService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    public boolean usernameExists(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     public UserDTO createUser(UserDTO userDTO) {
+        if (userDTO == null) {
+            throw new IllegalArgumentException("UserDTO cannot be null");
+        }
+
         String generatedPassword = RandomStringUtils.random(8, true, true);
         System.out.println("Generated password: " + generatedPassword);
 
@@ -35,13 +42,12 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(generatedPassword);
         userDTO.setPassword(hashedPassword);
 
-        Optional<Employee> employeeOptional = employeeRepository.findByUsername(userDTO.getUsername());
-        if (employeeOptional.isPresent()) {
-            User user = convertToEntity(userDTO);
-            user.setEmployee(employeeOptional.get());
-            return convertToDTO(userRepository.save(user));
+        boolean usernameExists = userRepository.findByUsername(userDTO.getUsername()).isPresent();
+        boolean identifyIdExists = employeeRepository.existsByIdentifyId(userDTO.getUsername());
+
+        if (usernameExists || identifyIdExists) {
+            throw new IllegalArgumentException("Username or Identify ID already exists");
         } else {
-            // Continue to create the User without linking to an Employee
             User user = convertToEntity(userDTO);
             return convertToDTO(userRepository.save(user));
         }
