@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,24 +35,18 @@ public class EmployeeService {
         return employee != null ? employee.getName() : null;
     }
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
     public EmployeeDTO getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .map(employee -> {
                     EmployeeDTO employeeDTO = convertToDTO(employee);
-                    String employeeName = employeeDTO.getName();
-                    System.out.println("Sending message: " + employeeName);
-                    rabbitTemplate.convertAndSend("employeeQueue", employeeName);
                     return employeeDTO;
                 })
                 .orElse(null);
     }
 
-    public List<EmployeeDTO> getAllEmployees() {
-        return employeeRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO, Long userId) {
         if (employeeDTO == null) {
@@ -69,11 +66,28 @@ public class EmployeeService {
             employee.setUser(user); // Liên kết Employee với User đã tạo
 
             Employee savedEmployee = employeeRepository.save(employee);
+
+            Long id = savedEmployee.getUser().getId();
+            System.out.println("Sending message: " + id);
+
+            // Serialize the Long id to a byte array
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                 ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+                oos.writeObject(id);
+                oos.flush();
+                byte[] idMessage = bos.toByteArray();
+                rabbitTemplate.convertAndSend("employeeQueue", idMessage);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to serialize id", e);
+            }
+
             return convertToDTO(savedEmployee);
         }
     }
 
-
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 
     public EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO) {
         Employee existingEmployee = employeeRepository.findById(id).orElse(null);
