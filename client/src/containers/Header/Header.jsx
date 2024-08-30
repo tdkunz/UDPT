@@ -5,6 +5,8 @@ import { useAuth } from '../../services/auth';
 
 import './Header.scss';
 
+import avatar from '../../assets/avatar.png'
+
 const Header = () => {
     const { isLoggedIn, login, logout } = useAuth();
     const [formData, setFormData] = useState({
@@ -54,26 +56,39 @@ const Header = () => {
                             <h2>Project</h2>
                         </NavLink>
                     </div>
-                    <div className='header-login-frame'>
-                        <Form className='login-form' onSubmit={handleSubmit}>
-                            <FormControl type="text" 
-                                         name = 'username' 
-                                         placeholder="Username" 
-                                         className="mr-sm-2" 
-                                         value={formData.username}
-                                         onChange={handleChange}
-                                         required />
-                            <FormControl type="password" 
-                                         name = 'password'
-                                         placeholder="Password" 
-                                         className="mr-sm-2"
-                                         value={formData.password}
-                                         onChange={handleChange} 
-                                         required />
-                            <Button type='submit' variant="warning">Login</Button>
-                        </Form>
-                    </div>
+                    { !isLoggedIn ? (
+                        <div className='header-login-frame'>
+                            <Form className='login-form' onSubmit={handleSubmit}>
+                                <FormControl type="text" 
+                                            name = 'username' 
+                                            placeholder="Username" 
+                                            className="mr-sm-2" 
+                                            value={formData.username}
+                                            onChange={handleChange}
+                                            required />
+                                <FormControl type="password" 
+                                            name = 'password'
+                                            placeholder="Password" 
+                                            className="mr-sm-2"
+                                            value={formData.password}
+                                            onChange={handleChange} 
+                                            required />
+                                <Button type='submit' variant="warning">Login</Button>
+                            </Form>
+                        </div>
+                    ) : (
+                        <NavLink to="/profile"> 
+                            <div class="mini-profile" >
+                                <p>
+                                    <b>Nguyễn Văn A</b>
+                                </p>
+                                <img src={avatar} />
+                            </div>
+                        </NavLink>
+                    )}
                 </div>
+
+                
             </div>
             <div className='header-menu'>
                 <NavLink to = '/' className='child-content'>
