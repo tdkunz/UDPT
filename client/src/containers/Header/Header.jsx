@@ -4,7 +4,12 @@ import { Form, FormControl, Button } from 'react-bootstrap';
 
 import './Header.scss';
 
+import avatar from '../../assets/avatar.png'
+
 const Header = () => {
+
+    const [isLogin, setIsLogin] = useState(true);
+
   return (
     <header className='header-homepage'>
         <div className='d-flex align-items-center text-center py-3 background-top-nav'>
@@ -14,13 +19,26 @@ const Header = () => {
                         <h2>Project</h2>
                     </NavLink>
                 </div>
-                <div className='header-login-frame'>
-                    <Form className='login-form'>
-                        <FormControl type="text" placeholder="Username" className="mr-sm-2" />
-                        <FormControl type="password" placeholder="Password" className="mr-sm-2" />
-                        <Button variant="warning">Login</Button>
-                    </Form>
-                </div>
+                { !isLogin ? (
+                    <div className='header-login-frame'>
+                        <Form className='login-form'>
+                            <FormControl type="text" placeholder="Username" className="mr-sm-2" />
+                            <FormControl type="password" placeholder="Password" className="mr-sm-2" />
+                            <Button variant="warning">Login</Button>
+                        </Form>
+                    </div>
+                 ) : 
+                (
+                    <NavLink to="/profile"> 
+                        <div class="mini-profile" >
+                            <p>
+                                <b>Nguyễn Văn A</b>
+                            </p>
+                            <img src={avatar} />
+                        </div>
+                    </NavLink>
+                )}
+                
             </div>
         </div>
         <div className='header-menu'>
