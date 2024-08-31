@@ -3,9 +3,26 @@ import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
 import './Profile.scss'
 import avatar from '../../assets/avatar.png'
+import axios from "axios";
 
 
 const Profile = () => {
+  const [employee, setEmployee] = useState({});
+
+  useEffect(() => {
+    const employeeId = localStorage.getItem('userid'); // Retrieve employee ID from local storage
+
+    const fetchEmployee = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/employees/${employeeId}`);
+        setEmployee(response.data);
+      } catch (error) {
+        console.error('Error fetching employee data:', error);
+      }
+    };
+
+    fetchEmployee();
+  }, []);
   return (
     <React.Fragment>
         <Header/>
@@ -14,22 +31,22 @@ const Profile = () => {
               <div class="col l-widget">
                 <div class="avatar" align="center">
                   <img src={avatar}/>
-                  <h3>Nguyễn Văn A</h3>
+                  <h3>{employee.name}</h3>
                 </div>
 
                 <div class="point row" align="center">
                   <h5> Điểm </h5>
                   <h4>123456</h4>
-        
+
                   <div class="col">
                     <button type="button" class="btn btn-danger">Đổi điểm</button>
                   </div>
                   <div class="col-7">
                     <button type="button" class="btn btn-success">Tham gia hoạt động</button>
                   </div>
-                
+
                 </div>
-                
+
               </div>
 
               <div class="col-8">
@@ -38,32 +55,32 @@ const Profile = () => {
                     <a href="/edit-profile" type="button" class="btn btn-primary">Chỉnh sửa</a>
                   </div>
 
-                  <table class="info-table table table-bordered" bordered>
+                  <table className="info-table table table-bordered" bordered>
                     <tbody>
-                      <tr>
-                        <td class="title">Ngày sinh:</td>
-                        <td class="field">1/1/1970</td>
-                      </tr>
-                      <tr>
-                        <td class="title">Số điện thoại:</td>
-                        <td class="field">0123456789</td>
-                      </tr>
-                      <tr>
-                        <td class="title">Địa chỉ:</td>
-                        <td class="field">227 Nguyễn Văn Cừ, Q5, TP HCM</td>
-                      </tr>
-                      <tr>
-                        <td class="title">CCCD:</td>
-                        <td class="field">012345678910</td>
-                      </tr>
-                      <tr>
-                        <td class="title">Mã số thuế:</td>
-                        <td class="field">0987654321</td>
-                      </tr>
-                      <tr>
-                        <td class="title">STK ngân hàng:</td>
-                        <td class="field">012345678910</td>
-                      </tr>
+                    <tr>
+                      <td className="title">Ngày sinh:</td>
+                      <td className="field">{employee.birthDate}</td>
+                    </tr>
+                    <tr>
+                      <td className="title">Số điện thoại:</td>
+                      <td className="field">{employee.phoneNumber}</td>
+                    </tr>
+                    <tr>
+                      <td className="title">Địa chỉ:</td>
+                      <td className="field">{employee.address}</td>
+                    </tr>
+                    <tr>
+                      <td className="title">CCCD:</td>
+                      <td className="field">{employee.identifyId}</td>
+                    </tr>
+                    <tr>
+                      <td className="title">Mã số thuế:</td>
+                      <td className="field">{employee.taxNumber}</td>
+                    </tr>
+                    <tr>
+                      <td className="title">STK ngân hàng:</td>
+                      <td className="field">{employee.bankNumber}</td>
+                    </tr>
                     </tbody>
                   </table>
                 </div>
