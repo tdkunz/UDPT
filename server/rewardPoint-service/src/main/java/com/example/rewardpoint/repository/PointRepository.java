@@ -3,5 +3,8 @@ package com.example.rewardpoint.repository;
 import com.example.rewardpoint.model.Point;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface PointRepository extends MongoRepository<Point, Long> {
+import java.util.Optional;
+
+public interface PointRepository extends MongoRepository<Point, String> {
+    Optional<Point> findByUid(Long uid);
 }

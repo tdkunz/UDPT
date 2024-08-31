@@ -5,8 +5,11 @@ import com.example.rewardpoint.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/rewards")
+@RequestMapping("/api/points")
 public class PointController {
 
     @Autowired
@@ -15,5 +18,15 @@ public class PointController {
     @PostMapping
     public Point createPoint(@RequestBody Point point) {
         return pointService.savePoint(point);
+    }
+
+    @GetMapping
+    public List<Point> getListPointRecord() {
+        return pointService.getListPointRecord();
+    }
+
+    @GetMapping("/{uid}")
+    public Optional<Point> getDetailPointRecord(@PathVariable Long uid) {
+        return pointService.getDetailPointRecord(uid);
     }
 }

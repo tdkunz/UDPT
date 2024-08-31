@@ -5,6 +5,9 @@ import com.example.rewardpoint.repository.PointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PointService {
 
@@ -21,5 +24,13 @@ public class PointService {
 
     public Point savePoint(Point point) {
         return pointRepository.save(point);
+    }
+
+    public List<Point> getListPointRecord() {
+        return pointRepository.findAll();
+    }
+
+    public Optional<Point> getDetailPointRecord(Long uid) {
+        return pointRepository.findByUid(uid);
     }
 }

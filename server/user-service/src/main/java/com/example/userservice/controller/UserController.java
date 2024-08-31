@@ -1,14 +1,12 @@
 package com.example.userservice.controller;
 
-import com.example.userservice.dto.UserDTO;
-import com.example.userservice.dto.EmployeeDTO;
-import com.example.userservice.dto.UserEmployeeRequest;
-import com.example.userservice.dto.UserEmployeeResponse;
+import com.example.userservice.dto.*;
 import com.example.userservice.service.UserService;
 import com.example.userservice.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +20,22 @@ public class UserController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        UserDTO userDTO = userService.getUserByUsername(loginRequest.getUsername());
+        if (userDTO != null && passwordEncoder.matches(loginRequest.getPassword(), userDTO.getPassword())) {
+            String token = "dummy-token";
+            LoginResponse response = new LoginResponse("Login successful", token, userDTO.getRole(), userDTO.getId());
+            return ResponseEntity.ok(response);
+        } else {
+            LoginResponse response = new LoginResponse("Invalid username or password", null, null, null);
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<UserEmployeeResponse> createUser(@RequestBody UserEmployeeRequest request) {
