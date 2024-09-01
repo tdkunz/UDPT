@@ -33,8 +33,5 @@ public class Employee {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uid", referencedColumnName = "id")
-    private User user;  // Foreign key reference to User
-
-    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY)
-    private Worktime worktime;
+    private User user;
 }

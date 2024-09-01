@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -21,4 +23,7 @@ public class User {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Employee employee;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Worktime> worktimes;
 }
