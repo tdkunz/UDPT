@@ -16,6 +16,12 @@ public class Employee {
     private String identifyId;
 
     private String name;
+    private String birthDate;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String avatar; // Base64 encoded string
+
     private String gender;
     private String taxNumber;
     private String address;

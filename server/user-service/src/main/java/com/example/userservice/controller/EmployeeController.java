@@ -4,7 +4,9 @@ import com.example.userservice.dto.EmployeeDTO;
 import com.example.userservice.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -37,5 +39,13 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+    }
+
+    @PostMapping("/{id}/avatar")
+    public EmployeeDTO uploadAvatar(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        String avatarBase64 = employeeService.uploadAvatar(file);
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(id);
+        employeeDTO.setAvatar(avatarBase64);
+        return employeeService.updateEmployee(id, employeeDTO);
     }
 }
