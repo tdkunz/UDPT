@@ -3,8 +3,10 @@ package com.example.userservice.service;
 import com.example.userservice.dto.EmployeeDTO;
 import com.example.userservice.model.Employee;
 import com.example.userservice.model.User;
+import com.example.userservice.model.Worktime;
 import com.example.userservice.repository.EmployeeRepository;
 import com.example.userservice.repository.UserRepository;
+import com.example.userservice.repository.WorktimeRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,6 +96,35 @@ public class EmployeeService {
 
             return convertToDTO(savedEmployee);
         }
+    }
+
+    @Autowired
+    private WorktimeRepository worktimeRepository;
+
+    public String checkIn(Long userId) {
+        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+        Optional<Worktime> existingWorktime = worktimeRepository.findByUserIdAndDay(userId, today);
+
+        if (existingWorktime.isPresent()) {
+            return "Already checked in for today";
+        }
+
+        Worktime worktime = new Worktime();
+        worktime.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+        worktime.setTimeStart(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        worktime.setDay(today);
+        worktimeRepository.save(worktime);
+        return "Check-in successful";
+    }
+
+    public String checkOut(Long userId) {
+        String today = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+        Worktime worktime = worktimeRepository.findByUserIdAndDay(userId, today)
+                .orElseThrow(() -> new RuntimeException("No check-in record found for today"));
+
+        worktime.setTimeEnd(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        worktimeRepository.save(worktime);
+        return "Check-out successful";
     }
 
     public List<EmployeeDTO> getAllEmployees() {

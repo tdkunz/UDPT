@@ -3,7 +3,7 @@ package com.example.requestservice.dto;
 import lombok.Data;
 
 @Data
-public class LeaveRequestDTO {
+public class RequestDTO {
     private String id;
     private String employeeId;
     private String reason;

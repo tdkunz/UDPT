@@ -1,8 +1,10 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.EmployeeDTO;
+import com.example.userservice.model.Worktime;
 import com.example.userservice.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,4 +50,17 @@ public class EmployeeController {
         employeeDTO.setAvatar(avatarBase64);
         return employeeService.updateEmployee(id, employeeDTO);
     }
+
+    @PostMapping("/checkin")
+    public ResponseEntity<String> checkIn(@RequestParam Long userId) {
+        String response = employeeService.checkIn(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<String> checkOut(@RequestParam Long userId) {
+        String response = employeeService.checkOut(userId);
+        return ResponseEntity.ok(response);
+    }
+
 }
