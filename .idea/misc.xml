@@ -22,6 +22,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/server/activity-service/pom.xml" />
         <option value="$PROJECT_DIR$/server/manager-service/pom.xml" />
       </set>
     </option>

@@ -27,6 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy": "https://www.strava.com",
   "eslintConfig": {
     "extends": [
       "react-app",
