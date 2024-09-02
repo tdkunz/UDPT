@@ -9,10 +9,12 @@ const Profile = () => {
 
   useEffect(() => {
     const employeeId = localStorage.getItem('userid'); // Retrieve employee ID from local storage
+    console.log(employeeId);
 
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/employees/${employeeId}`);
+        const response = await axios.get(`https://4f31-2001-ee0-564e-d760-6cbe-bae2-6094-96d6.ngrok-free.app/api/employees/${employeeId}`);
+        console.log(response.data);
         setEmployee(response.data);
       } catch (error) {
         console.error('Error fetching employee data:', error);
