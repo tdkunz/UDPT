@@ -59,7 +59,7 @@ const Header = () => {
                             <h2>Project</h2>
                         </NavLink>
                     </div>
-                    {!true ? (
+                    {!isLoggedIn ? (
                         <div className='header-login-frame'>
                             <Form className='login-form' onSubmit={handleSubmit}>
                                 <FormControl
