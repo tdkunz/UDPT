@@ -20,7 +20,7 @@ const RightSidebar = () => {
         "Loại yêu cầu": "Check-in, Check-out",
         "Time_start": timeStart,
         "Time_end": timeEnd
-    }
+    };
 
     const formatDateTime = (date) => {
         const year = date.getFullYear();
@@ -40,7 +40,30 @@ const RightSidebar = () => {
             year: 'numeric'
         });
         setCurrentDate(date);
-    }, []);
+    
+        // Lấy dữ liệu từ localStorage
+        const storedCheckInTime = localStorage.getItem('checkInTime');
+        const storedCheckOutTime = localStorage.getItem('checkOutTime');
+        const storedDate = localStorage.getItem('checkDate');
+    
+        // Tạo thời gian 07:00 của ngày hôm sau
+        const resetTime = new Date(today);
+        resetTime.setDate(today.getDate() + 1); // Tăng ngày lên 1
+        resetTime.setHours(7, 0, 0, 0);
+    
+        // Nếu ngày hiện tại đã qua 07:00 của ngày hôm sau, reset trạng thái
+        if (storedDate !== today.toDateString() || today >= resetTime) {
+            // Đã qua 07:00, reset trạng thái
+            localStorage.removeItem('checkInTime');
+            localStorage.removeItem('checkOutTime');
+            setCheckInTime('');
+            setCheckOutTime('');
+        } else {
+            // Nếu trong ngày hiện tại, giữ nguyên trạng thái
+            if (storedCheckInTime) setCheckInTime(storedCheckInTime);
+            if (storedCheckOutTime) setCheckOutTime(storedCheckOutTime);
+        }
+    }, [setCheckInTime, setCheckOutTime]);
 
     const getCurrentTime = () => {
         const now = new Date();
@@ -52,6 +75,8 @@ const RightSidebar = () => {
             const timeString = getCurrentTime();
             setCheckInTime(timeString);
             setTimeStart(timeString);
+            localStorage.setItem('checkInTime', timeString);
+            localStorage.setItem('checkDate', new Date().toDateString());
             setErrorMessage(''); // Reset thông báo lỗi nếu có
         }
     };
@@ -63,6 +88,7 @@ const RightSidebar = () => {
             const timeString = getCurrentTime();
             setCheckOutTime(timeString);
             setTimeEnd(timeString);
+            localStorage.setItem('checkOutTime', timeString);
         }
     };
 

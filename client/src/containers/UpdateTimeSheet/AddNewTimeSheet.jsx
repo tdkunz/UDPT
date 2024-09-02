@@ -5,10 +5,13 @@ import Form from 'react-bootstrap/Form';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from 'react-bootstrap-time-picker';
+import axios from 'axios';
 
 import './AddNewTimeSheet.scss';
 
 export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
+    const [userData, setUserData] = useState('');
+    const userId = localStorage.getItem('userid');
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -41,17 +44,36 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
         return '00:00:00';
     };
 
-    const formatDateTime = (date, timeString) => {
-        const formattedDate = formatDate(date);
-        const formattedTime = formatTime(timeString);
-        return `${formattedDate} ${formattedTime}`;
-    };
+    // API lấy thông tin user :V
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/employees/${userId}`);
+                if (response.status === 200) {
+                    setUserData(response.data);
+                    console.log(response.data);
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const timeSheetInfo = {
-        "Họ tên": "Nguyễn Văn A",
-        "Bộ phận": "Phòng kế toán",
-        "time_start": formatDateTime(timeSheetData.date, timeSheetData.time_start),
-        "time_end": formatDateTime(timeSheetData.date, timeSheetData.time_end)
+        "employeeId": userData.id, 
+        "managerId": "2", 
+        "employeeName": userData.name,
+        "requestType": "Update", 
+        "day": formatDate(timeSheetData.date),
+        "timeStart": formatTime(timeSheetData.time_start),
+        "timeEnd": formatTime(timeSheetData.time_end),
+        "reasonRequest": null,
+        "device": null,
+        "status": "Chưa duyệt",
+        "reasonReject": ""
     };
 
     const handleDateChange = (date, name) => {
@@ -72,7 +94,7 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async (event) => {
         const start = formatTime(timeSheetData.time_start);
         const end = formatTime(timeSheetData.time_end);
         if (end < start) {
@@ -80,7 +102,22 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
             return;
         }
         console.log("Update Info: ", timeSheetInfo);
-        setSendSuccessful(true);
+
+        // API gửi yêu cầu update
+        try {
+            const response = await axios.post(`http://localhost:8082/api/requests`, timeSheetInfo);
+            console.log('Response:', response.data);
+            if (response.status === 200) {
+                alert('Gửi yêu cầu thành công');
+                setSendSuccessful(true);
+            } else {
+                const message = response.data.message || 'An error occurred while login';
+                alert(message);
+            }
+        } catch (error) {
+            const message = error.response?.data?.message || 'An error occurred while update';
+            alert(message)
+        }
     }
 
     useEffect(() => {
@@ -97,18 +134,18 @@ export function AddNewTimeSheet({show, handleClose, handleConfirm}) {
             <Modal.Body>
                 <Form> 
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>Họ tên:</Form.Label>
+                        <Form.Label>Mã nhân viên:</Form.Label>
                         <Form.Control
                             type="text"
-                            value={"Nguyễn Văn A"}
+                            value={userData.id}
                             disabled
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                        <Form.Label>Bộ phận:</Form.Label>
+                        <Form.Label>Họ tên:</Form.Label>
                         <Form.Control
                             type="text"
-                            value={"Phòng kế toán"}
+                            value={userData.name}
                             disabled
                         />
                     </Form.Group>

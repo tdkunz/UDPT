@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DetailLeave from './DetailLeave';
+import axios from 'axios';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
@@ -14,6 +15,8 @@ import './Leave.scss';
 
 const Leave = () => {
   const [leaveMethod, setLeaveMethod] = useState('oneday');
+  const [userData, setUserData] = useState('');
+  const userId = localStorage.getItem('userid');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -48,14 +51,23 @@ const Leave = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  const leaveInfo = {
-    "Họ tên": "Nguyễn Văn A",
-    "Bộ phận": "Phòng kế toán",
-    "Phone": "0123456789",
-    "time_start": formatDateTime(new Date(leaveData.time_start)),
-    "time_end": formatDateTime(new Date(leaveData.time_end)),
-    "Lý do": leaveData.reason
-  }
+  // API lấy thông tin user :V
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/employees/${userId}`);
+            if (response.status === 200) {
+                setUserData(response.data);
+                console.log(response.data);
+            } else {
+                console.error("Error fetching user data");
+            }
+        } catch (error) {
+            console.error("Error during API request:", error);
+        }
+    };
+    fetchData();
+  }, []);
 
   const handleDateChange = (date, name) => {
     if (leaveMethod === 'oneday') {
@@ -94,6 +106,20 @@ const Leave = () => {
     });
   };
 
+  //xem lại khúc này
+  const leaveInfo = {
+    "employeeId": userData.id,
+    "managerId": "2",
+    "employeeName": userData.name,
+    "requestType": "Leave",
+    "time_start": formatDateTime(new Date(leaveData.time_start)),
+    "time_end": formatDateTime(new Date(leaveData.time_end)),
+    "reasonRequest": leaveData.reason,
+    "device": null,
+    "status": "Chưa duyệt",
+    "reasonReject": ""
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const timeStart = new Date(leaveData.time_start);
@@ -110,6 +136,20 @@ const Leave = () => {
       return;
     }
     console.log("Leave Info: ", leaveInfo);
+    // API
+    try {
+      const response = await axios.post(`http://localhost:8082/api/requests`, leaveInfo);
+      console.log('Response:', response.data);
+      if (response.status === 200) {
+          alert('Gửi yêu cầu thành công');
+      } else {
+          const message = response.data.message || 'An error occurred while login';
+          alert(message);
+      }
+    } catch (error) {
+        const message = error.response?.data?.message || 'An error occurred while update';
+        alert(message)
+    }
   };
 
   return (
@@ -202,7 +242,7 @@ const Leave = () => {
                       <Row>
                           <Form.Group>
                               <Form.Control type='text'
-                                            value={"Nguyễn Văn A"}
+                                            value={userData.name}
                                             disabled
                               ></Form.Control>
                           </Form.Group>
@@ -215,7 +255,7 @@ const Leave = () => {
                       <Row>
                           <Form.Group>
                               <Form.Control type='text'
-                                            value={"Phòng kế toán"}
+                                            value={userData.department}
                                             disabled
                               ></Form.Control>
                           </Form.Group>
@@ -228,7 +268,7 @@ const Leave = () => {
                       <Row>
                           <Form.Group>
                               <Form.Control type='text'
-                                            value={"0123456789"}
+                                            value={userData.phoneNumber}
                                             disabled
                               ></Form.Control>
                           </Form.Group>

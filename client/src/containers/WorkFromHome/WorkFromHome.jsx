@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
@@ -17,11 +18,14 @@ const WorkFromHome = () => {
   const [errorTimeStart, setErrorTimeStart] = useState('');
   const [equipment, setEquipment] = useState(false);
 
+  const [userData, setUserData] = useState('');
+  const userId = localStorage.getItem('userid');
+
   const [wfhData, setWFHData] = useState({
     time_start: today,
     time_end: today,
     reason: '',
-    equipmentList: ''
+    equipmentList: null
   });
 
   const formatDateTime = (date) => {
@@ -34,16 +38,23 @@ const WorkFromHome = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  const wfhInfo = {
-    "Họ tên": "Nguyễn Văn A",
-    "Bộ phận": "Phòng kế toán",
-    "Phone": "0123456789",
-    "time_start": formatDateTime(new Date(wfhData.time_start)),
-    "time_end": formatDateTime(new Date(wfhData.time_end)),
-    "Lý do": wfhData.reason,
-    "Yêu cầu thiết bị": equipment,
-    "Danh sách thiết bị": wfhData.equipmentList
-  }
+  // API lấy thông tin user :V
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/employees/${userId}`);
+            if (response.status === 200) {
+                setUserData(response.data);
+                console.log(response.data);
+            } else {
+                console.error("Error fetching user data");
+            }
+        } catch (error) {
+            console.error("Error during API request:", error);
+        }
+    };
+    fetchData();
+  }, []);
 
   const handleDateChange = (date, name) => {
     const startDate = new Date(date);
@@ -67,6 +78,19 @@ const WorkFromHome = () => {
     });
   };
 
+  const wfhInfo = {
+    "employeeId": userData.id, 
+    "managerId": "2", 
+    "employeeName": userData.name,
+    "requestType": "WFH", 
+    "timeStart": formatDateTime(new Date(wfhData.time_start)),
+    "timeEnd": formatDateTime(new Date(wfhData.time_end)),
+    "reasonRequest": wfhData.reason,
+    "device": wfhData.equipmentList,
+    "status": "Chưa duyệt",
+    "reasonReject": ""
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const timeStart = new Date(wfhData.time_start);
@@ -76,6 +100,20 @@ const WorkFromHome = () => {
       return;
     }
     console.log("WFH Info: ", wfhInfo);
+    // API gửi request
+    try {
+      const response = await axios.post(`http://localhost:8082/api/requests`, wfhInfo);
+      console.log('Response:', response.data);
+      if (response.status === 200) {
+          alert('Gửi yêu cầu thành công');
+      } else {
+          const message = response.data.message || 'An error occurred while login';
+          alert(message);
+      }
+    } catch (error) {
+        const message = error.response?.data?.message || 'An error occurred while update';
+        alert(message)
+    }
   };
 
   return (
@@ -96,7 +134,7 @@ const WorkFromHome = () => {
                     <Form.Label className='fw-bold'>Họ tên:</Form.Label>
                     <Form.Control
                         type="text"
-                        value={"Nguyễn Văn A"}
+                        value={userData.name}
                         disabled
                     />
                   </Form.Group>
@@ -104,7 +142,7 @@ const WorkFromHome = () => {
                     <Form.Label className='fw-bold'>Bộ phận:</Form.Label>
                     <Form.Control
                         type="text"
-                        value={"Phòng kế toán"}
+                        value={userData.department}
                         disabled
                     />
                   </Form.Group>
@@ -112,7 +150,7 @@ const WorkFromHome = () => {
                     <Form.Label className='fw-bold'>Số điện thoại:</Form.Label>
                     <Form.Control
                         type="text"
-                        value={"0123456789"}
+                        value={userData.phoneNumber}
                         disabled
                     />
                   </Form.Group>

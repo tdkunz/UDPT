@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Form, Button } from "react-bootstrap";
+import axios from 'axios';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
@@ -11,6 +12,8 @@ import './UpdateTimeSheet.scss';
 const UpdateTimeSheet = () => {
   const [isOpenAdd, setIsOpenAdd] = useState(false);
   const [isOpenDetail, setIsOpenDetail] = useState(false);
+
+  const [requestID, setRequestID] = useState('');
 
   const handleShowAdd = () => {
     setIsOpenAdd(true);
@@ -24,7 +27,8 @@ const UpdateTimeSheet = () => {
     handleCloseAdd()
   }
 
-  const handleShowDetail = () => {
+  const handleShowDetail = (id) => {
+    setRequestID(id);
     setIsOpenDetail(true);
   }
 
@@ -35,6 +39,27 @@ const UpdateTimeSheet = () => {
   const handleConfirmDetail = () => {
     handleCloseDetail()
   }
+
+  const [updateList, setUpdateList] = useState([]);
+
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              // thêm API lấy danh sách request có loại là update time-sheet và khác "Chưa duyệt"
+              const response = await axios.get(`https://localhost:8080/api/requests/update-time-sheet`);
+              if (response.status === 200) {
+                  
+                setUpdateList(response.data);
+                  
+              } else {
+                  console.error("Error fetching user data");
+              }
+          } catch (error) {
+              console.error("Error during API request:", error);
+          }
+      };
+      fetchData();
+  }, []);
 
   return (
     <React.Fragment>
@@ -67,22 +92,30 @@ const UpdateTimeSheet = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>03/07/2024</td>
-                      <td>8:00</td>
-                      <td>17:00</td>
+                  {updateList.length > 0 ? (
+                    updateList.map((request) => (
+                    <tr key = {request.id}>
+                      <td>{request.day}</td>
+                      <td>{request.timeStart}</td>
+                      <td>{request.timeEnd}</td>
                       <td>
-                        <span className="badge badge-soft-success mb-0">
-                          Đã duyệt
-                        </span>
+                      <span className={`badge ${request.status === 'Chấp thuận' ? 'badge-soft-success' : 'badge-soft-danger'} mb-0`}>
+                        {request.status}
+                      </span>
                       </td>
                       <td>
                         <span className='text-decoration-underline detail'
-                              onClick={handleShowDetail}>
+                              onClick={handleShowDetail(request.id)}>
                           Xem thêm
                         </span>
                       </td>
                     </tr>
+                    ))
+                    ) : (
+                    <tr>
+                      <td colSpan="5">Không có dữ liệu</td>
+                    </tr>
+                  )}
                   </tbody>
                 </table>
               </div>
@@ -97,6 +130,7 @@ const UpdateTimeSheet = () => {
                       handleConfirm = {handleConfirmAdd}
       />
       <DetailUpdate show = {isOpenDetail}
+                      id = {requestID}
                       handleClose = {handleCloseDetail}
                       handleConfirm = {handleConfirmDetail}
       />

@@ -2,10 +2,32 @@ import React, { useState, useEffect, useRef } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import axios from 'axios';
 
 import './DetailUpdate.scss';
 
-export function DetailUpdate({show, handleClose, handleConfirm}) {
+export function DetailUpdate({show, id, handleClose, handleConfirm}) {
+
+    const [updateInfo, setUpdateInfo] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // API lấy thông tin chi tiết request
+                const response = await axios.get(`https://localhost:8080/api/requests/${id}`);
+                if (response.status === 200) {
+                    
+                    setUpdateInfo(response.data);
+                    
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -18,7 +40,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Mã nhân viên:</Form.Label>
                 <Form.Control
                     type="text"
-                    value={"123"}
+                    value={updateInfo.employeeId}
                     autoFocus
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
@@ -28,17 +50,8 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Họ tên:</Form.Label>
                 <Form.Control
                     type="text"
-                    value={"Nguyễn Văn A"}
+                    value={updateInfo.employeeName}
                     autoFocus
-                    disabled
-                    style={{ backgroundColor: '#fff', color: '#000' }}
-                />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                <Form.Label>Bộ phận:</Form.Label>
-                <Form.Control
-                    type="text"
-                    value={"Phòng kế toán"}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -47,7 +60,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Cập nhật ngày:</Form.Label>
                 <Form.Control
                     type="text"
-                    value={"26/07/2024"}
+                    value={updateInfo.day}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -56,7 +69,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Bắt đầu:</Form.Label>
                 <Form.Control
                     type="text"
-                    value={"08:00"}
+                    value={updateInfo.timeStart}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -65,7 +78,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Kết thúc:</Form.Label>
                 <Form.Control
                     type="text"
-                    value={"17:00"}
+                    value={updateInfo.timeEnd}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />
@@ -74,7 +87,7 @@ export function DetailUpdate({show, handleClose, handleConfirm}) {
                 <Form.Label>Lý do từ chối:</Form.Label>
                 <Form.Control
                     as="textarea"
-                    value={"abc"}
+                    value={updateInfo.reasonReject}
                     disabled
                     style={{ backgroundColor: '#fff', color: '#000' }}
                 />

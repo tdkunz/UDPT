@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios';
 
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
@@ -13,8 +14,12 @@ import "../UpdateTimeSheet/UpdateTimeSheet.scss";
 const Approve = () => {
     const [listType, setListType] = useState('requested');
     const [isOpenDetail, setIsOpenDetail] = useState(false);
+    const [notApprovedList, setNotApprovedList] = useState([]);
+    const [approvedList, setApprovedList] = useState([]);
+    const [requestID, setRequestID] = useState('');
 
-    const handleShowDetail = () => {
+    const handleShowDetail = (id) => {
+        setRequestID(id);
         setIsOpenDetail(true);
     }
 
@@ -25,6 +30,44 @@ const Approve = () => {
     const handleConfirmDetail = () => {
     handleCloseDetail()
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // thêm API lấy danh sách request và có status là "Chưa duyệt"
+                const response = await axios.get(`https://localhost:8080/api/requests/not-approved`);
+                if (response.status === 200) {
+                    
+                    setNotApprovedList(response.data);
+                    
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // thêm API lấy danh sách request và có status khác "Chưa duyệt"
+                const response = await axios.get(`https://localhost:8080/api/requests/approved`);
+                if (response.status === 200) {
+                    
+                    setApprovedList(response.data);
+                    
+                } else {
+                    console.error("Error fetching user data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
        <React.Fragment>
@@ -61,33 +104,41 @@ const Approve = () => {
                         <div className="col-lg-12">
                             <div className="update-timesheet-history">
                                 <table className="table uts-table table-nowrap align-middle table-borderless">
-                                <thead className='sticky-header'>
-                                    <tr>
-                                    <th scope="col">Ngày</th>
-                                    <th scope="col">Nhân viên</th>
-                                    <th scope="col">Loại yêu cầu</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Chi tiết</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                    <td>03/07/2024</td>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>Xin nghỉ</td>
-                                    <td>
-                                        <span className="badge badge-soft-warning mb-0">
-                                        Chưa duyệt
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span className='text-decoration-underline detail'
-                                            onClick={handleShowDetail}>
-                                        Xem thêm
-                                        </span>
-                                    </td>
-                                    </tr>
-                                </tbody>
+                                    <thead className='sticky-header'>
+                                        <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Nhân viên</th>
+                                        <th scope="col">Loại yêu cầu</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col">Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {notApprovedList.length > 0 ? (
+                                    notApprovedList.map((request, index) => (
+                                        <tr key = {request.id}>
+                                            <td>{index + 1}</td>
+                                            <td>{request.employeeName}</td>
+                                            <td>{request.requestType}</td>
+                                            <td>
+                                                <span className="badge badge-soft-warning mb-0">
+                                                    {request.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className='text-decoration-underline detail'
+                                                    onClick={handleShowDetail(request.id)}>
+                                                Xem thêm
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        ))
+                                        ) : (
+                                        <tr>
+                                            <td colSpan="5">Không có dữ liệu</td>
+                                        </tr>
+                                    )}
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -96,33 +147,41 @@ const Approve = () => {
                         <div className="col-lg-12">
                             <div className="update-timesheet-history">
                                 <table className="table uts-table table-nowrap align-middle table-borderless">
-                                <thead className='sticky-header'>
-                                    <tr>
-                                    <th scope="col">Ngày</th>
-                                    <th scope="col">Nhân viên</th>
-                                    <th scope="col">Loại yêu cầu</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Chi tiết</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                    <td>20/06/2024</td>
-                                    <td>Nguyễn Văn A</td>
-                                    <td>Xin nghỉ</td>
-                                    <td>
-                                        <span className="badge badge-soft-danger mb-0">
-                                        Từ chối
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span className='text-decoration-underline detail'
-                                            onClick={handleShowDetail}>
-                                        Xem thêm
-                                        </span>
-                                    </td>
-                                    </tr>
-                                </tbody>
+                                    <thead className='sticky-header'>
+                                        <tr>
+                                        <th scope="col">Ngày</th>
+                                        <th scope="col">Nhân viên</th>
+                                        <th scope="col">Loại yêu cầu</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col">Chi tiết</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {approvedList.length > 0 ? (
+                                    approvedList.map((request, index) => (
+                                        <tr key = {request.id}>
+                                            <td>{index + 1}</td>
+                                            <td>{request.employeeName}</td>
+                                            <td>{request.requestType}</td>
+                                            <td>
+                                                <span className={`badge ${request.status === 'Chấp thuận' ? 'badge-soft-success' : 'badge-soft-danger'} mb-0`}>
+                                                    {request.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span className='text-decoration-underline detail'
+                                                    onClick={handleShowDetail(request.id)}>
+                                                Xem thêm
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="5">Không có dữ liệu</td>
+                                        </tr>
+                                    )}
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -132,6 +191,7 @@ const Approve = () => {
            </section>
            <Footer />
            <RequestDetail show = {isOpenDetail}
+                      id = {requestID}
                       handleClose = {handleCloseDetail}
                       handleConfirm = {handleConfirmDetail}
             />
