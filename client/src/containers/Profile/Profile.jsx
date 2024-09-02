@@ -6,6 +6,7 @@ import axios from 'axios';
 
 const Profile = () => {
   const [employee, setEmployee] = useState({});
+  const [point, setPoint] = useState({});
 
   useEffect(() => {
     const employeeId = localStorage.getItem('userid'); // Retrieve employee ID from local storage
@@ -16,6 +17,15 @@ const Profile = () => {
         const response = await axios.get(`https://4f31-2001-ee0-564e-d760-6cbe-bae2-6094-96d6.ngrok-free.app/api/employees/${employeeId}`);
         console.log(response.data);
         setEmployee(response.data);
+      } catch (error) {
+        console.error('Error fetching employee data:', error);
+      }
+    };
+
+    const fetchPoint = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8081/api/points/${employeeId}`);
+        setPoint(response.data);
       } catch (error) {
         console.error('Error fetching employee data:', error);
       }
@@ -37,7 +47,7 @@ const Profile = () => {
 
               <div className="point row" align="center">
                 <h5> Điểm </h5>
-                <h4>123456</h4>
+                <h4>{point.totalPoint}</h4>
 
                 <div className="col">
                   <button type="button" className="btn btn-danger">Đổi điểm</button>

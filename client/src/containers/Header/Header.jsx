@@ -46,6 +46,13 @@ const Header = () => {
         }
     };
 
+    const handleLogout = async () => {
+        localStorage.setItem('userid', '');
+        localStorage.setItem('role', '');
+        localStorage.setItem('isLoggedIn', false);
+        navigate('/');
+    }
+
     return (
         <header className='header-homepage'>
             <div className='d-flex align-items-center text-center py-3 background-top-nav'>
@@ -55,7 +62,7 @@ const Header = () => {
                             <h2>Project</h2>
                         </NavLink>
                     </div>
-                    {!isLoggedIn ? (
+                    {!true ? (
                         <div className='header-login-frame'>
                             <Form className='login-form' onSubmit={handleSubmit}>
                                 <FormControl
@@ -80,14 +87,19 @@ const Header = () => {
                             </Form>
                         </div>
                     ) : (
-                        <NavLink to="/profile">
-                            <div className="mini-profile">
-                                <p>
-                                    <b>Nguyễn Văn A</b>
-                                </p>
-                                <img src={avatar} alt="avatar" />
-                            </div>
-                        </NavLink>
+                        <div>
+                            <NavLink to="/profile">
+                                <div className="mini-profile">
+                                    <p>
+                                        <b>Nguyễn Văn A</b>
+                                    </p>
+                                    <img src={avatar} alt="avatar" />
+                                </div>
+                            </NavLink>
+                            <a class="btn btn-dark logout-btn" onClick={handleLogout}>
+                                Đăng xuất
+                            </a>
+                        </div>
                     )}
                 </div>
             </div>
@@ -112,6 +124,14 @@ const Header = () => {
                 <NavLink to='/activities' className='child-content'>
                     Activities
                 </NavLink>
+                {localStorage.getItem('role') == 'Manager' ? (
+                    <NavLink to='/create-account' className='child-content'>
+                        Create Account
+                    </NavLink>
+                ) : (
+                    <></>
+                )}
+                
             </div>
         </header>
     );
