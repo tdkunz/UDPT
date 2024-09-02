@@ -9,6 +9,7 @@ import avatar from '../../assets/avatar.png';
 
 const Header = () => {
     const { isLoggedIn, login, logout } = useAuth();
+    const [fullName, setFullName] = useState('');
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -29,7 +30,7 @@ const Header = () => {
         event.preventDefault();
         try {
             // Sửa lại thành localhost
-            const response = await axios.post('https://4f31-2001-ee0-564e-d760-6cbe-bae2-6094-96d6.ngrok-free.app/api/users/login', formData);
+            const response = await axios.post('http://localhost:8081/api/users/login', formData);
             if (response.status === 200) {
                 localStorage.setItem('userid', response.data.id);
                 localStorage.setItem('role', response.data.role);
@@ -45,6 +46,20 @@ const Header = () => {
             alert(message);
         }
     };
+
+    useEffect(() => {
+        const fetchFullName = async () => {
+            try {
+                const userId = localStorage.getItem('userid');
+                const response = await axios.get(`http://localhost:8081/api/employees/name/${userId}`);
+                setFullName(response.data);
+            } catch (error) {
+                console.error('Error fetching full name:', error);
+            }
+        };
+
+        fetchFullName();
+    }, []);
 
     const handleLogout = async () => {
         localStorage.setItem('userid', '');
@@ -91,9 +106,9 @@ const Header = () => {
                             <NavLink to="/profile">
                                 <div className="mini-profile">
                                     <p>
-                                        <b>Nguyễn Văn A</b>
+                                        <b>{fullName}</b>
                                     </p>
-                                    <img src={avatar} alt="avatar" />
+                                    
                                 </div>
                             </NavLink>
                             <a class="btn btn-dark logout-btn" onClick={handleLogout}>

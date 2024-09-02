@@ -1,7 +1,6 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.EmployeeDTO;
-import com.example.userservice.model.Worktime;
 import com.example.userservice.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,11 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public EmployeeDTO getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
+    }
+
+    @GetMapping("/name/{id}")
+    public String getEmployeeNameById(@PathVariable Long id) {
+        return employeeService.getEmployeeNameById(id);
     }
 
     @PutMapping("/{id}")
