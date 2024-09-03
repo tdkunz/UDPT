@@ -52,4 +52,11 @@ public class RequestService {
         }
         return null;
     }
+    public List<Request> getRequestsByStatus(String status) {
+        return requestRepository.findByStatus(status);
+    }
+
+    public List<Request> getRequestsByStatusNot(String status) {
+        return requestRepository.findByStatusNot(status);
+    }
 }

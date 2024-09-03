@@ -38,4 +38,13 @@ public class RequestController {
     public Request rejectRequest(@PathVariable String id, @RequestParam String lyDoTuChoi) {
         return requestService.rejectRequest(id, lyDoTuChoi);
     }
+    @GetMapping("/not-approved")
+    public List<Request> getNotApprovedRequests() {
+        return requestService.getRequestsByStatus("Chua duyet");
+    }
+
+    @GetMapping("/approved")
+    public List<Request> getApprovedRequests() {
+        return requestService.getRequestsByStatusNot("Chua duyet");
+    }
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import { CheckInContext } from '../../services/CheckInProvider';
 import { CheckOutContext } from '../../services/CheckOutProvider';
 import { Button } from 'react-bootstrap';
@@ -40,17 +41,17 @@ const RightSidebar = () => {
             year: 'numeric'
         });
         setCurrentDate(date);
-    
+
         // Lấy dữ liệu từ localStorage
         const storedCheckInTime = localStorage.getItem('checkInTime');
         const storedCheckOutTime = localStorage.getItem('checkOutTime');
         const storedDate = localStorage.getItem('checkDate');
-    
+
         // Tạo thời gian 07:00 của ngày hôm sau
         const resetTime = new Date(today);
         resetTime.setDate(today.getDate() + 1); // Tăng ngày lên 1
         resetTime.setHours(7, 0, 0, 0);
-    
+
         // Nếu ngày hiện tại đã qua 07:00 của ngày hôm sau, reset trạng thái
         if (storedDate !== today.toDateString() || today >= resetTime) {
             // Đã qua 07:00, reset trạng thái
@@ -70,25 +71,50 @@ const RightSidebar = () => {
         return formatDateTime(now);
     };
 
-    const handleCheckIn = () => {
-        if (!checkInTime) {
-            const timeString = getCurrentTime();
-            setCheckInTime(timeString);
-            setTimeStart(timeString);
-            localStorage.setItem('checkInTime', timeString);
-            localStorage.setItem('checkDate', new Date().toDateString());
-            setErrorMessage(''); // Reset thông báo lỗi nếu có
+    const handleCheckIn = async () => {
+        const userId = localStorage.getItem('userid');
+        if (!checkInTime && userId) {
+            try {
+                const response = await axios.post('http://localhost:8081/api/employees/checkin', null, {
+                    params: { userId }
+                });
+                if (response.status === 200) {
+                    const timeString = getCurrentTime();
+                    setCheckInTime(timeString);
+                    setTimeStart(timeString);
+                    localStorage.setItem('checkInTime', timeString);
+                    localStorage.setItem('checkDate', new Date().toDateString());
+                    setErrorMessage(''); // Reset thông báo lỗi nếu có
+                } else {
+                    setErrorMessage('Error during check-in');
+                }
+            } catch (error) {
+                setErrorMessage('Error during check-in: ' + error.message);
+            }
         }
     };
 
-    const handleCheckOut = () => {
+    const handleCheckOut = async () => {
+        const userId = localStorage.getItem('userid');
         if (!checkInTime) {
             setErrorMessage('Bạn phải Check-in trước khi Check-out!');
-        } else if (!checkOutTime) {
-            const timeString = getCurrentTime();
-            setCheckOutTime(timeString);
-            setTimeEnd(timeString);
-            localStorage.setItem('checkOutTime', timeString);
+        } else if (!checkOutTime && userId) {
+            try {
+                const response = await axios.post('http://localhost:8081/api/employees/checkout', null, {
+                    params: { userId }
+                });
+                if (response.status === 200) {
+                    const timeString = getCurrentTime();
+                    setCheckOutTime(timeString);
+                    setTimeEnd(timeString);
+                    localStorage.setItem('checkOutTime', timeString);
+                    setErrorMessage(''); // Reset thông báo lỗi nếu có
+                } else {
+                    setErrorMessage('Error during check-out');
+                }
+            } catch (error) {
+                setErrorMessage('Error during check-out: ' + error.message);
+            }
         }
     };
 
@@ -104,7 +130,7 @@ const RightSidebar = () => {
         <React.Fragment>
             <div className='checkin-checkout'>
                 <div className='title'>
-                    Thời gian làm việc: 
+                    Thời gian làm việc:
                     <span> {currentDate}</span>
                 </div>
                 <div className='py-3 ps-3'>

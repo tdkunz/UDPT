@@ -35,11 +35,11 @@ const Approve = () => {
         const fetchData = async () => {
             try {
                 // thêm API lấy danh sách request và có status là "Chưa duyệt"
-                const response = await axios.get(`https://localhost:8080/api/requests/not-approved`);
+                const response = await axios.get(`http://localhost:8082/api/requests/not-approved`);
                 if (response.status === 200) {
-                    
+
                     setNotApprovedList(response.data);
-                    
+
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -54,11 +54,11 @@ const Approve = () => {
         const fetchData = async () => {
             try {
                 // thêm API lấy danh sách request và có status khác "Chưa duyệt"
-                const response = await axios.get(`https://localhost:8080/api/requests/approved`);
+                const response = await axios.get(`http://localhost:8082/api/requests/approved`);
                 if (response.status === 200) {
-                    
+
                     setApprovedList(response.data);
-                    
+
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -78,7 +78,7 @@ const Approve = () => {
                         <div className="col-md-6">
                             <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 mb-3 button-switch">
                                 <FontAwesomeIcon icon={faArrowLeft} className={`${listType === 'approved' ? '' : 'd-none'}`}/>
-                                <span 
+                                <span
                                     className={`card-title ${listType === 'requested' ? 'selected' : ''}`}
                                     id="requested"
                                     onClick={() => setListType('requested')}
@@ -89,7 +89,7 @@ const Approve = () => {
                         </div>
                         <div className="col-md-6">
                             <div className="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3 button-switch">
-                                <span 
+                                <span
                                     className={`${listType === 'approved' ? 'selected' : ''}`}
                                     id="approved"
                                     onClick={() => setListType('approved')}
