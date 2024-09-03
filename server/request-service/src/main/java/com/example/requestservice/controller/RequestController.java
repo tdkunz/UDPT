@@ -30,21 +30,31 @@ public class RequestController {
     }
 
     @PutMapping("/{id}/approve")
-    public Request approveRequest(@PathVariable String id, @RequestParam String nhanVienPheDuyet) {
-        return requestService.approveRequest(id, nhanVienPheDuyet);
+    public Request approveRequest(@PathVariable String id, @RequestParam String status) {
+        return requestService.approveRequest(id, status);
     }
 
     @PutMapping("/{id}/reject")
-    public Request rejectRequest(@PathVariable String id, @RequestParam String lyDoTuChoi) {
-        return requestService.rejectRequest(id, lyDoTuChoi);
+    public Request rejectRequest(@PathVariable String id, @RequestParam String status, @RequestParam String reasonReject) {
+        return requestService.rejectRequest(id, status, reasonReject);
     }
     @GetMapping("/not-approved")
     public List<Request> getNotApprovedRequests() {
-        return requestService.getRequestsByStatus("Chua duyet");
+        return requestService.getRequestsByStatus("Chưa duyệt");
     }
 
     @GetMapping("/approved")
     public List<Request> getApprovedRequests() {
-        return requestService.getRequestsByStatusNot("Chua duyet");
+        return requestService.getRequestsByStatusNot("Chưa duyệt");
+    }
+
+    @GetMapping("/leave")
+    public List<Request> getLeaveRequests() {
+        return requestService.getLeaveRequests();
+    }
+
+    @GetMapping("/update")
+    public List<Request> getUpdateRequests() {
+        return requestService.getUpdateTimeSheetRequests();
     }
 }

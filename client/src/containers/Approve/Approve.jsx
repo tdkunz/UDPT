@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import React, { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
 import Header from '../Header/Header';
@@ -21,25 +20,22 @@ const Approve = () => {
     const handleShowDetail = (id) => {
         setRequestID(id);
         setIsOpenDetail(true);
-    }
+    };
 
     const handleCloseDetail = () => {
-    setIsOpenDetail(false);
-    }
+        setIsOpenDetail(false);
+    };
 
     const handleConfirmDetail = () => {
-    handleCloseDetail()
-    }
+        handleCloseDetail();
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchNotApprovedData = async () => {
             try {
-                // thêm API lấy danh sách request và có status là "Chưa duyệt"
-                const response = await axios.get(`http://localhost:8082/api/requests/not-approved`);
+                const response = await axios.get('http://localhost:8082/api/requests/not-approved');
                 if (response.status === 200) {
-
                     setNotApprovedList(response.data);
-
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -47,18 +43,15 @@ const Approve = () => {
                 console.error("Error during API request:", error);
             }
         };
-        fetchData();
+        fetchNotApprovedData();
     }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchApprovedData = async () => {
             try {
-                // thêm API lấy danh sách request và có status khác "Chưa duyệt"
-                const response = await axios.get(`http://localhost:8082/api/requests/approved`);
+                const response = await axios.get('http://localhost:8082/api/requests/approved');
                 if (response.status === 200) {
-
                     setApprovedList(response.data);
-
                 } else {
                     console.error("Error fetching user data");
                 }
@@ -66,18 +59,18 @@ const Approve = () => {
                 console.error("Error during API request:", error);
             }
         };
-        fetchData();
+        fetchApprovedData();
     }, []);
 
     return (
-       <React.Fragment>
-           <Header />
-           <section>
+        <React.Fragment>
+            <Header />
+            <section>
                 <div className='content-frame'>
                     <div className="d-flex align-items-center m-3 update-timesheet-header">
                         <div className="col-md-6">
                             <div className="d-flex flex-wrap align-items-center justify-content-start gap-2 mb-3 button-switch">
-                                <FontAwesomeIcon icon={faArrowLeft} className={`${listType === 'approved' ? '' : 'd-none'}`}/>
+                                <FontAwesomeIcon icon={faArrowLeft} className={`${listType === 'approved' ? '' : 'd-none'}`} />
                                 <span
                                     className={`card-title ${listType === 'requested' ? 'selected' : ''}`}
                                     id="requested"
@@ -94,9 +87,9 @@ const Approve = () => {
                                     id="approved"
                                     onClick={() => setListType('approved')}
                                     checked={listType === 'approved'}>
-                                        Approved List
+                                    Approved List
                                 </span>
-                                <FontAwesomeIcon icon={faArrowRight} className={`${listType === 'requested' ? '' : 'd-none'}`}/>
+                                <FontAwesomeIcon icon={faArrowRight} className={`${listType === 'requested' ? '' : 'd-none'}`} />
                             </div>
                         </div>
                     </div>
@@ -105,35 +98,35 @@ const Approve = () => {
                             <div className="update-timesheet-history">
                                 <table className="table uts-table table-nowrap align-middle table-borderless">
                                     <thead className='sticky-header'>
-                                        <tr>
+                                    <tr>
                                         <th scope="col">STT</th>
                                         <th scope="col">Nhân viên</th>
                                         <th scope="col">Loại yêu cầu</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Chi tiết</th>
-                                        </tr>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     {notApprovedList.length > 0 ? (
-                                    notApprovedList.map((request, index) => (
-                                        <tr key = {request.id}>
-                                            <td>{index + 1}</td>
-                                            <td>{request.employeeName}</td>
-                                            <td>{request.requestType}</td>
-                                            <td>
-                                                <span className="badge badge-soft-warning mb-0">
-                                                    {request.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className='text-decoration-underline detail'
-                                                    onClick={handleShowDetail(request.id)}>
-                                                Xem thêm
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        notApprovedList.map((request, index) => (
+                                            <tr key={request.id}>
+                                                <td>{index + 1}</td>
+                                                <td>{request.employeeName}</td>
+                                                <td>{request.requestType}</td>
+                                                <td>
+                                                        <span className="badge badge-soft-warning mb-0">
+                                                            {request.status}
+                                                        </span>
+                                                </td>
+                                                <td>
+                                                        <span className='text-decoration-underline detail'
+                                                              onClick={() => handleShowDetail(request.id)}>
+                                                            Xem thêm
+                                                        </span>
+                                                </td>
+                                            </tr>
                                         ))
-                                        ) : (
+                                    ) : (
                                         <tr>
                                             <td colSpan="5">Không có dữ liệu</td>
                                         </tr>
@@ -148,33 +141,33 @@ const Approve = () => {
                             <div className="update-timesheet-history">
                                 <table className="table uts-table table-nowrap align-middle table-borderless">
                                     <thead className='sticky-header'>
-                                        <tr>
-                                        <th scope="col">Ngày</th>
+                                    <tr>
+                                        <th scope="col">STT</th>
                                         <th scope="col">Nhân viên</th>
                                         <th scope="col">Loại yêu cầu</th>
                                         <th scope="col">Trạng thái</th>
                                         <th scope="col">Chi tiết</th>
-                                        </tr>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     {approvedList.length > 0 ? (
-                                    approvedList.map((request, index) => (
-                                        <tr key = {request.id}>
-                                            <td>{index + 1}</td>
-                                            <td>{request.employeeName}</td>
-                                            <td>{request.requestType}</td>
-                                            <td>
-                                                <span className={`badge ${request.status === 'Chấp thuận' ? 'badge-soft-success' : 'badge-soft-danger'} mb-0`}>
-                                                    {request.status}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span className='text-decoration-underline detail'
-                                                    onClick={handleShowDetail(request.id)}>
-                                                Xem thêm
-                                                </span>
-                                            </td>
-                                        </tr>
+                                        approvedList.map((request, index) => (
+                                            <tr key={request.id}>
+                                                <td>{index + 1}</td>
+                                                <td>{request.employeeName}</td>
+                                                <td>{request.requestType}</td>
+                                                <td>
+                                                        <span className={`badge ${request.status === 'Chấp thuận' ? 'badge-soft-success' : 'badge-soft-danger'} mb-0`}>
+                                                            {request.status}
+                                                        </span>
+                                                </td>
+                                                <td>
+                                                        <span className='text-decoration-underline detail'
+                                                              onClick={() => handleShowDetail(request.id)}>
+                                                            Xem thêm
+                                                        </span>
+                                                </td>
+                                            </tr>
                                         ))
                                     ) : (
                                         <tr>
@@ -188,15 +181,15 @@ const Approve = () => {
                     </div>
                 </div>
                 <RightSidebar />
-           </section>
-           <Footer />
-           <RequestDetail show = {isOpenDetail}
-                      id = {requestID}
-                      handleClose = {handleCloseDetail}
-                      handleConfirm = {handleConfirmDetail}
+            </section>
+            <Footer />
+            <RequestDetail show={isOpenDetail}
+                           id={requestID}
+                           handleClose={handleCloseDetail}
+                           handleConfirm={handleConfirmDetail}
             />
-       </React.Fragment>
-     );
+        </React.Fragment>
+    );
 }
 
 export default Approve;

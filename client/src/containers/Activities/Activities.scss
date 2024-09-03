@@ -1,76 +1,68 @@
-.no-bg {
-    display: flex;
-    justify-content: space-between;
-    background-color: transparent !important;
 
-    .rank {
-        width: 20%;
-        max-height: 500px;
-        margin: 20px 0;
-        background-color: white;
-        border-radius: 10px;
+.rank {
+    width: 20%;
+    max-height: 500px;
+    margin: 20px 0;
+    background-color: white;
+    border-radius: 10px;
 
-        .rank-list {
+    .rank-list {
+        display: flex;
+        // flex-wrap: wrap;
+        flex-direction: column;
+
+        .rank-list-child {
             display: flex;
-            // flex-wrap: wrap;
-            flex-direction: column;
+            justify-content: space-between;
+            margin: 10px;
+            height: 25px;
 
-            .rank-list-child {
-                display: flex;
-                justify-content: space-between;
-                margin: 10px;
-                height: 25px;
+            span {
+                width: 20%;
+            }
 
-                span {
-                    width: 20%;
-                }
-
-                h6 {
-                    width: 75%;
-                }
+            h6 {
+                width: 75%;
             }
         }
     }
+}
 
-    .activity {
-        width: 77%;
-        max-height: 500px;
-        overflow-y: scroll;
+
+.activities-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-height: 800px;
+    overflow-y: scroll;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    .activity-card {
+        width: 30%;
         margin: 20px 0;
-        background-color: white;
+        background-color: rgb(203 203 203);
         border-radius: 10px;
 
-        .activities-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-left: 20px;
-            padding-right: 20px;
+        .card-title {
+            font-size: 20px !important;
+        }
 
-            .activity-card {
-                width: 30%;
-                margin: 20px 0;
-                background-color: rgb(183, 183, 183);
-                border-radius: 10px;
+        .activity-detail {
+            padding: 15px 10px;
 
-                .activity-detail {
-                    padding: 15px 10px;
+            .activity-info {
+                display: flex;
+                justify-content: space-between;
+                padding: 5px 5px 0;
 
-                    .activity-info {
-                        display: flex;
-                        justify-content: space-between;
-                        padding: 5px 5px 0;
-    
-                        h6 {
-                            width: 50%;
-                        }
-    
-                        span {
-                            width: 45%;
-                        }
-                    }
+                h6 {
+                    width: 50%;
+                }
+
+                span {
+                    width: 45%;
                 }
             }
         }

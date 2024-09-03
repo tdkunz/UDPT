@@ -122,23 +122,31 @@ const Header = () => {
                 <NavLink to='/' className='child-content'>
                     Thông báo
                 </NavLink>
-                <NavLink to='/leave' className='child-content'>
-                    Nghỉ phép
-                </NavLink>
-                <NavLink to='/update-time-sheet' className='child-content'>
-                    Update Time-sheet
-                </NavLink>
-                <NavLink to='/work-from-home' className='child-content'>
-                    Work from home
-                </NavLink>
-                {role === "Manager" &&(
+                {role === "Employee" && (
+                    <NavLink to='/leave' className='child-content'>
+                        Nghỉ phép
+                    </NavLink>
+                )}
+                {role === "Employee" && (
+                    <NavLink to='/update-time-sheet' className='child-content'>
+                        Update Time-sheet
+                    </NavLink>
+                )}
+                {role === "Employee" && (
+                    <NavLink to='/work-from-home' className='child-content'>
+                        Work from home
+                    </NavLink>
+                )}
+                {role === "Manager" && (
                     <NavLink to='/approve' className='child-content'>
                         Approve
                     </NavLink>
                 )}
-                <NavLink to='/activities' className='child-content'>
-                    Activities
-                </NavLink>
+                {role === "Manager" && (
+                    <NavLink to='/activities' className='child-content'>
+                        Activities
+                    </NavLink>
+                 )}
                 {localStorage.getItem('role') == 'Manager' ? (
                     <NavLink to='/create-account' className='child-content'>
                         Create Account

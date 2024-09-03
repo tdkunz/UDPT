@@ -45,11 +45,9 @@ public class UserService {
             throw new IllegalArgumentException("UserDTO cannot be null");
         }
 
-        String generatedPassword = RandomStringUtils.random(8, true, true);
-        System.out.println("Generated password: " + generatedPassword);
-
+        String defaultPassword = "1234";
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(generatedPassword);
+        String hashedPassword = passwordEncoder.encode(defaultPassword);
         userDTO.setPassword(hashedPassword);
 
         boolean usernameExists = userRepository.findByUsername(userDTO.getUsername()).isPresent();

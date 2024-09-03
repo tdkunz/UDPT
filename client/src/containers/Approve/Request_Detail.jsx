@@ -15,22 +15,22 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                // API lấy thông tin chi tiết request
-                const response = await axios.get(`https://localhost:8080/api/requests/${id}`);
-                if (response.status === 200) {
-                    
-                    setRequestData(response.data);
-                    
-                } else {
-                    console.error("Error fetching user data");
+            if (id) {
+                try {
+                    // API lấy thông tin chi tiết request
+                    const response = await axios.get(`http://localhost:8082/api/requests/${id}`);
+                    if (response.status === 200) {
+                        setRequestData(response.data);
+                    } else {
+                        console.error("Error fetching user data");
+                    }
+                } catch (error) {
+                    console.error("Error during API request:", error);
                 }
-            } catch (error) {
-                console.error("Error during API request:", error);
             }
         };
         fetchData();
-    }, []);
+    }, [id]);
 
     const requestInfo = {
         "id": requestData.id,
@@ -42,20 +42,24 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
         setAccept("Chấp thuận");
         try {
             // API cập nhật trường Status của request thành "Chấp thuận"
-            const response = await axios.put(`http://localhost:8080/api/requests/${id}`, requestInfo);
+            const response = await axios.put(`http://localhost:8082/api/requests/${id}/approve`, null, {
+                params: {
+                    status: "Chấp thuận"
+                }
+            });
             console.log('Response:', response.data);
             if (response.status === 200) {
                 alert('Cập nhật thành công');
             } else {
-                const message = response.data.message || 'An error occurred while login';
+                const message = response.data.message || 'An error occurred while updating';
                 alert(message);
             }
         } catch (error) {
-            const message = error.response?.data?.message || 'An error occurred while update';
-            alert(message)
+            const message = error.response?.data?.message || 'An error occurred while updating';
+            alert(message);
         }
         handleConfirm();
-    }
+    };
 
     const handleReject = async (event) => {
         if (rejectionReason.trim() === '') {
@@ -64,18 +68,22 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
             setError('');
             setAccept("Từ chối");
             try {
-                // API cập nhật trường Status của request thành "Từ chối" và cập nhật lý do từ chối
-                const response = await axios.put(`http://localhost:8080/api/requests/${id}`, requestInfo);
+                const response = await axios.put(`http://localhost:8082/api/requests/${id}/reject`, null, {
+                    params: {
+                        status: "Từ chối",
+                        reasonReject: rejectionReason
+                    }
+                });
                 console.log('Response:', response.data);
                 if (response.status === 200) {
                     alert('Cập nhật thành công');
                 } else {
-                    const message = response.data.message || 'An error occurred while login';
+                    const message = response.data.message || 'An error occurred while updating';
                     alert(message);
                 }
             } catch (error) {
-                const message = error.response?.data?.message || 'An error occurred while update';
-                alert(message)
+                const message = error.response?.data?.message || 'An error occurred while updating';
+                alert(message);
             }
             handleClose();
         }
@@ -225,7 +233,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                             <Form.Control
                                 as="textarea"
                                 placeholder="Lý do từ chối"
-                                value={rejectionReason}
+                                value={requestData.reasonReject}
                                 onChange={(e) => setRejectionReason(e.target.value)}
                                 disabled={accept !== 'Chưa duyệt'}
                                 style={{

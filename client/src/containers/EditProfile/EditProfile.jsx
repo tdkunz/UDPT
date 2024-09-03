@@ -76,10 +76,11 @@ const EditProfile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("WFH Info: ", employee);
-    // API gửi request
+    const employeeId = localStorage.getItem('userid');
+    console.log("Update Info: ", employee);
+    // API gửi edit profile
     try {
-      const response = await axios.post(`http://localhost:8080/api/requests`, employee);
+      const response = await axios.put(`http://localhost:8081/api/employees/${employeeId}`, employee);
       console.log('Response:', response.data);
       if (response.status === 200) {
           alert('Gửi yêu cầu thành công');
