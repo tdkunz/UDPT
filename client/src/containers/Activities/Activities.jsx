@@ -9,6 +9,7 @@ const Activities = () => {
 
   const [accessToken, setAccessToken] = useState(null);
   const [tokenExpiry, setTokenExpiry] = useState(null);
+  const [isLoginPrompted, setIsLoginPrompted] = useState(false);
 
   const clientId = '131434';
   const clientSecret = 'd305058502da66473739f3aeaad4397c2cf165a2';
@@ -67,6 +68,7 @@ const Activities = () => {
         setTokenExpiry(expiryTime);
         localStorage.setItem('strava_access_token', data.access_token);
         localStorage.setItem('strava_token_expiry', expiryTime);
+        setIsLoginPrompted(false);
         // Clear the URL parameters to avoid re-triggering the useEffect
         window.history.replaceState({}, document.title, "/");
       } else {
@@ -79,42 +81,93 @@ const Activities = () => {
 
   // Function to make an API request to Strava with access token
   // Neu token het han thi se thong bao va yeu cau dang nhap lai
-  const fetchAthleteData = async () => {
-    if (!accessToken || new Date().getTime() >= tokenExpiry) {
-      console.error('Access token not available or expired');
-      handleLogin();
-      return;
-    }
+  const [activityList, setActivityList] = useState([]);
+  useEffect(() => {
+    const fetchAthleteData = async () => {
+        if (!accessToken || new Date().getTime() >= tokenExpiry) {
+            console.error('Access token không có sẵn hoặc đã hết hạn');
+            if (!isLoginPrompted) {
+                setIsLoginPrompted(true);
+                handleLogin(); // Yêu cầu người dùng đăng nhập lại
+            }
+            return;
+        }
 
-    try {
-      const response = await fetch('https://www.strava.com/api/v3/athlete/activities', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+        try {
+            const response = await fetch('https://www.strava.com/api/v3/athlete/activities', {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
 
-      const data = await response.json();
-      console.log('Athlete data:', data);
-    } catch (error) {
-      console.error('Error fetching athlete data:', error);
+            const data = await response.json();
+            setActivityList(data);
+            console.log('Athlete data:', data);
+        } catch (error) {
+            console.error('Error fetching athlete data:', error);
+        }
+    };
+
+    if (accessToken && new Date().getTime() < tokenExpiry) {
+        console.log("token:",accessToken);
+        fetchAthleteData();
     }
-  };
+  }, [accessToken, tokenExpiry]);
 
   return (
       <React.Fragment>
         <Header />
         <section>
-          <div>
-            <h1>Strava OAuth2 Authentication</h1>
-            {!accessToken ? (
+          <div className='content-frame'>
+            {/* <div>
+            {!accessToken && (
                 <button onClick={handleLogin}>Login with Strava</button>
-            ) : (
-                <div>
-                  <p>Access Token: {accessToken}</p>
-                  <button onClick={fetchAthleteData}>Fetch Athlete Data</button>
-                </div>
             )}
+            </div> */}
+            <div className='d-flex align-items-center m-3 border-bottom border-dark'>
+              <h5 className="card-title mb-3">Your Activities</h5>
+            </div>
+            <div className='activities-list'>
+            {activityList.map((item) => (
+              <div className='activity-card'>
+                  <div key = {item.id} className='d-flex align-items-center justify-content-center py-2 border-bottom border-dark'>
+                    <h5 className="card-title">{item.name}</h5>
+                  </div>
+                  <div className='activity-detail'>
+                    <div className='activity-info'>
+                      <h6>Distance: </h6>
+                      <span>{item.distance} meters</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Moving time: </h6>
+                      <span>{item.moving_time} seconds</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Elevation: </h6>
+                      <span>{item.total_elevation_gain} seconds</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Avarege speed: </h6>
+                      <span>{item.average_speed} m/s</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Max speed: </h6>
+                      <span>{item.max_speed} m/s</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Elapsed time: </h6>
+                      <span>{item.elapsed_time} seconds</span>
+                    </div>
+                    <div className='activity-info'>
+                      <h6>Type: </h6>
+                      <span>{item.type}</span>
+                    </div>
+                  </div>
+              </div>
+            ))}
+            </div>
           </div>
+          <RightSidebar />
         </section>
         <Footer/>
       </React.Fragment>
