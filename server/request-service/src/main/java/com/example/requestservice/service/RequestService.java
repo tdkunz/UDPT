@@ -33,21 +33,20 @@ public class RequestService {
         requestRepository.deleteById(id);
     }
 
-    public Request approveRequest(String id, String nhanVienPheDuyet) {
+    public Request approveRequest(String id, String status) {
         Request request = requestRepository.findById(id).orElse(null);
         if (request != null) {
-            request.setStatus("Approved");
-            request.setEmployeeId(nhanVienPheDuyet);
+            request.setStatus(status);
             return requestRepository.save(request);
         }
         return null;
     }
 
-    public Request rejectRequest(String id, String lyDoTuChoi) {
+    public Request rejectRequest(String id, String status, String reasonReject) {
         Request yeuCau = requestRepository.findById(id).orElse(null);
         if (yeuCau != null) {
-            yeuCau.setStatus("Rejected");
-            yeuCau.setReasonReject(lyDoTuChoi);
+            yeuCau.setStatus(status);
+            yeuCau.setReasonReject(reasonReject);
             return requestRepository.save(yeuCau);
         }
         return null;
@@ -58,5 +57,12 @@ public class RequestService {
 
     public List<Request> getRequestsByStatusNot(String status) {
         return requestRepository.findByStatusNot(status);
+    }
+
+    public List<Request> getLeaveRequests() {
+        return requestRepository.findByRequestType("Leave");
+    }
+    public List<Request> getUpdateTimeSheetRequests() {
+        return requestRepository.findByRequestType("Update");
     }
 }

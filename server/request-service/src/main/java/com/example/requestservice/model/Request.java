@@ -13,7 +13,7 @@ public class Request {
     private String employeeName;
     private String managerId; // ID of the approving manager
     private String requestType; // Request type
-//    private String day;
+    private String day;
     private String timeStart;
     private String timeEnd;
     private String reasonRequest;

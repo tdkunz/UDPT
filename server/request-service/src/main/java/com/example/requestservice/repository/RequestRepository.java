@@ -9,5 +9,8 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends MongoRepository<Request, String> {
     List<Request> findByStatus(String status);
+
     List<Request> findByStatusNot(String status);
+
+    List<Request> findByRequestType(String requestType);
 }
