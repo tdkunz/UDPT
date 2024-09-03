@@ -18,14 +18,13 @@ const Leave = () => {
   const [userData, setUserData] = useState('');
   const userId = localStorage.getItem('userid');
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   const [isOpenDetail, setIsOpenDetail] = useState(false);
   const [errorTimeStart, setErrorTimeStart] = useState('');
   const [errorTimeEnd, setErrorTimeEnd] = useState('');
   const [leaveData, setLeaveData] = useState({
-    timeStart: today,
-    timeEnd: today,
+    timeStart: today.setHours(0, 0, 0, 0),
+    timeEnd: today.setHours(23, 59, 59, 999),
     reason: ''
   });
 
@@ -140,7 +139,7 @@ const Leave = () => {
     const timeEnd = new Date(leaveData.timeEnd);
     setErrorTimeStart('');
     setErrorTimeEnd('');
-    if (timeStart < today) {
+    if (timeStart < today.setHours(0, 0, 0, 0)) {
       setErrorTimeStart('Ngày bắt đầu không được nhỏ hơn ngày hiện tại.');
       return;
     }

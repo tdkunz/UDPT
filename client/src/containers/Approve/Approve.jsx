@@ -142,7 +142,7 @@ const Approve = () => {
                                 <table className="table uts-table table-nowrap align-middle table-borderless">
                                     <thead className='sticky-header'>
                                     <tr>
-                                        <th scope="col">Ngày</th>
+                                        <th scope="col">STT</th>
                                         <th scope="col">Nhân viên</th>
                                         <th scope="col">Loại yêu cầu</th>
                                         <th scope="col">Trạng thái</th>
