@@ -24,8 +24,8 @@ const Leave = () => {
   const [errorTimeStart, setErrorTimeStart] = useState('');
   const [errorTimeEnd, setErrorTimeEnd] = useState('');
   const [leaveData, setLeaveData] = useState({
-    time_start: today,
-    time_end: today,
+    timeStart: today,
+    timeEnd: today,
     reason: ''
   });
 
@@ -66,12 +66,26 @@ const Leave = () => {
             console.error("Error during API request:", error);
         }
     };
+
+    const fetchLeaveList = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8082/api/requests/leave`);
+        if (response.status === 200) {
+          setUserData(response.data);
+          console.log(response.data);
+        } else {
+          console.error("Error fetching user data");
+        }
+      } catch (error) {
+        console.error("Error during API request:", error);
+      }
+    };
     fetchData();
   }, []);
 
   const handleDateChange = (date, name) => {
     if (leaveMethod === 'oneday') {
-      // Đặt giờ phút cho time_start là 00:00 và time_end là 23:59
+      // Đặt giờ phút cho timeStart là 00:00 và timeEnd là 23:59
       const startDate = new Date(date);
       startDate.setHours(0, 0, 0, 0);
   
@@ -80,14 +94,14 @@ const Leave = () => {
   
       setLeaveData({
         ...leaveData,
-        time_start: startDate,
-        time_end: endDate
+        timeStart: startDate,
+        timeEnd: endDate
       });
     } else {
       const updatedDate = new Date(date);
-      if (name === 'time_start') {
+      if (name === 'timeStart') {
         updatedDate.setHours(0, 0, 0, 0);
-      } else if (name === 'time_end') {
+      } else if (name === 'timeEnd') {
         updatedDate.setHours(23, 59, 59, 999);
       }
   
@@ -112,8 +126,8 @@ const Leave = () => {
     "managerId": "2",
     "employeeName": userData.name,
     "requestType": "Leave",
-    "time_start": formatDateTime(new Date(leaveData.time_start)),
-    "time_end": formatDateTime(new Date(leaveData.time_end)),
+    "timeStart": formatDateTime(new Date(leaveData.timeStart)),
+    "timeEnd": formatDateTime(new Date(leaveData.timeEnd)),
     "reasonRequest": leaveData.reason,
     "device": null,
     "status": "Chưa duyệt",
@@ -122,8 +136,8 @@ const Leave = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const timeStart = new Date(leaveData.time_start);
-    const timeEnd = new Date(leaveData.time_end);
+    const timeStart = new Date(leaveData.timeStart);
+    const timeEnd = new Date(leaveData.timeEnd);
     setErrorTimeStart('');
     setErrorTimeEnd('');
     if (timeStart < today) {
@@ -136,6 +150,7 @@ const Leave = () => {
       return;
     }
     console.log("Leave Info: ", leaveInfo);
+
     // API
     try {
       const response = await axios.post(`http://localhost:8082/api/requests`, leaveInfo);
@@ -278,9 +293,9 @@ const Leave = () => {
                 <div className= {`datepick ${leaveMethod === 'oneday' ? '' : 'd-none'}`}>
                   <label className='col-sm-3 col-form-label'>Chọn ngày nghỉ:</label>
                   <DatePicker
-                      name = 'time_start'
-                      selected={leaveData.time_start}
-                      onChange={(date) => handleDateChange(date, 'time_start')}
+                      name = 'timeStart'
+                      selected={leaveData.timeStart}
+                      onChange={(date) => handleDateChange(date, 'timeStart')}
                       dateFormat="dd/MM/yyyy"
                       className="form-control form-control-lg custom-datepick"
                       required
@@ -291,9 +306,9 @@ const Leave = () => {
                   <div className='datepick'>
                     <label className='col-sm-3 col-form-label'>Nghỉ từ ngày:</label>
                     <DatePicker
-                        name = 'time_start'
-                        selected={leaveData.time_start}
-                        onChange={(date) => handleDateChange(date, 'time_start')}
+                        name = 'timeStart'
+                        selected={leaveData.timeStart}
+                        onChange={(date) => handleDateChange(date, 'timeStart')}
                         dateFormat="dd/MM/yyyy"
                         className="form-control form-control-lg custom-datepick"
                         required
@@ -303,9 +318,9 @@ const Leave = () => {
                   <div className='datepick'>
                     <label className='col-sm-3 col-form-label'>Đến hết ngày:</label>
                     <DatePicker
-                        name = 'time_end'
-                        selected={leaveData.time_end}
-                        onChange={(date) => handleDateChange(date, 'time_end')}
+                        name = 'timeEnd'
+                        selected={leaveData.timeEnd}
+                        onChange={(date) => handleDateChange(date, 'timeEnd')}
                         dateFormat="dd/MM/yyyy"
                         placeholder = '30/03/2024'
                         className="form-control form-control-lg custom-datepick"

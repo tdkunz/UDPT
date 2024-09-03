@@ -15,22 +15,22 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                // API lấy thông tin chi tiết request
-                const response = await axios.get(`https://localhost:8080/api/requests/${id}`);
-                if (response.status === 200) {
-                    
-                    setRequestData(response.data);
-                    
-                } else {
-                    console.error("Error fetching user data");
+            if (id) {
+                try {
+                    // API lấy thông tin chi tiết request
+                    const response = await axios.get(`http://localhost:8082/api/requests/${id}`);
+                    if (response.status === 200) {
+                        setRequestData(response.data);
+                    } else {
+                        console.error("Error fetching user data");
+                    }
+                } catch (error) {
+                    console.error("Error during API request:", error);
                 }
-            } catch (error) {
-                console.error("Error during API request:", error);
             }
         };
         fetchData();
-    }, []);
+    }, [id]);
 
     const requestInfo = {
         "id": requestData.id,
@@ -42,7 +42,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
         setAccept("Chấp thuận");
         try {
             // API cập nhật trường Status của request thành "Chấp thuận"
-            const response = await axios.put(`http://localhost:8080/api/requests/${id}`, requestInfo);
+            const response = await axios.put(`http://localhost:8082/api/requests/${id}/approve`, requestInfo);
             console.log('Response:', response.data);
             if (response.status === 200) {
                 alert('Cập nhật thành công');
@@ -65,7 +65,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
             setAccept("Từ chối");
             try {
                 // API cập nhật trường Status của request thành "Từ chối" và cập nhật lý do từ chối
-                const response = await axios.put(`http://localhost:8080/api/requests/${id}`, requestInfo);
+                const response = await axios.put(`http://localhost:8082/api/requests/${id}/reject`, requestInfo);
                 console.log('Response:', response.data);
                 if (response.status === 200) {
                     alert('Cập nhật thành công');
