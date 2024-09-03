@@ -53,7 +53,7 @@ function App() {
       />
       <Route 
         path="/give-point" 
-        element={<ProtectedRoute roles={['Employee']} element={<GivePoint />} />}
+        element={<ProtectedRoute roles={['Manager']} element={<GivePoint />} />}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
      

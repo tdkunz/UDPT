@@ -22,48 +22,36 @@ const GivePoint = () => {
   const handleShow = () => setShow(true);
 
 
-  useEffect(() => {
-      const fetchData = async () => {
-          try {
-              // thêm API lấy danh sách request có loại là update time-sheet và khác "Chưa duyệt"
-              const response = await axios.get(`https://localhost:8080/api/requests/update-time-sheet`);
-              if (response.status === 200) {
-                  
-                setEmployees(response.data);
-                  
-              } else {
-                  console.error("Error fetching user data");
-              }
-          } catch (error) {
-              console.error("Error during API request:", error);
-          }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const employeeResponse = await axios.get(`http://localhost:8081/api/employees`);
+                const pointResponse = await axios.get(`http://localhost:8080/api/points`);
 
-          try {
-            // thêm API lấy danh sách request có loại là update time-sheet và khác "Chưa duyệt"
-            const response = await axios.get(`https://localhost:8080/api/points/${localStorage.getItem('userid')}`);
-            if (response.status === 200) {
-              setPoints(response.data);
-                
-            } else {
-                console.error("Error fetching user data");
+                if (employeeResponse.status === 200 && pointResponse.status === 200) {
+                    const employees = employeeResponse.data;
+                    const points = pointResponse.data;
+
+                    // Map points to employees
+                    const updatedEmployees = employees.map(employee => {
+                        const pointRecord = points.find(point => point.uid === employee.id);
+                        return {
+                            ...employee,
+                            point: pointRecord ? pointRecord.totalPoint : 0
+                        };
+                    });
+
+                    setEmployees(updatedEmployees);
+                } else {
+                    console.error("Error fetching data");
+                }
+            } catch (error) {
+                console.error("Error during API request:", error);
             }
-        } catch (error) {
-            console.error("Error during API request:", error);
-        }
-        employees.map((employee) => {
-            var cur_point = points.filter((point) => point.id == localStorage.getItem('userid'));
-            console.log(cur_point);
-            try{
-                employee['point'] = cur_point[0].totalPoint;
-            }
-            catch{
-                employee['point'] = 0;
-            }
-        })
-      };
-      fetchData();
-    //   setEmployees([{'name': 'Nguyễn Văn A', 'point': 123},{'name': 'Lê Văn B', 'point': 456}])
-  }, []);
+        };
+
+        fetchData();
+    }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
