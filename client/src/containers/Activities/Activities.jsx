@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Header from '../Header/Header';
 import RightSidebar from '../RightSidebar/RightSidebar';
 import Footer from '../Footer/Footer';
 import "./Activities.scss";
 
 const Activities = () => {
-
   const [accessToken, setAccessToken] = useState(null);
   const [tokenExpiry, setTokenExpiry] = useState(null);
   const [isLoginPrompted, setIsLoginPrompted] = useState(false);
+  const [activityList, setActivityList] = useState([]);
 
   const clientId = '131434';
   const clientSecret = 'd305058502da66473739f3aeaad4397c2cf165a2';
@@ -20,20 +19,27 @@ const Activities = () => {
     // Check if accessToken is already in localStorage
     const storedAccessToken = localStorage.getItem('strava_access_token');
     const storedTokenExpiry = localStorage.getItem('strava_token_expiry');
-    if (storedAccessToken && storedTokenExpiry && new Date().getTime() < storedTokenExpiry) {
-      setAccessToken(storedAccessToken);
-      setTokenExpiry(storedTokenExpiry);
-      return;
-    }
-
-    // Step 3: After redirect, get authorization code from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const authorizationCode = urlParams.get('code');
-    console.log("Authorization code from URL:", authorizationCode);
-
-    if (authorizationCode) {
-      // Exchange authorization code for access token
-      fetchAccessToken(authorizationCode);
+    
+    if (storedAccessToken && storedTokenExpiry) {
+      const currentTime = new Date().getTime();
+      if (currentTime < storedTokenExpiry) {
+        setAccessToken(storedAccessToken);
+        setTokenExpiry(storedTokenExpiry);
+      } else {
+        localStorage.removeItem('strava_access_token');
+        localStorage.removeItem('strava_token_expiry');
+        handleLogin();
+      }
+    } else {
+      // If no token, check URL for authorization code
+      const urlParams = new URLSearchParams(window.location.search);
+      const authorizationCode = urlParams.get('code');
+      
+      if (authorizationCode) {
+        fetchAccessToken(authorizationCode);
+      } else {
+        handleLogin();
+      }
     }
   }, []);
 
@@ -68,8 +74,6 @@ const Activities = () => {
         setTokenExpiry(expiryTime);
         localStorage.setItem('strava_access_token', data.access_token);
         localStorage.setItem('strava_token_expiry', expiryTime);
-        setIsLoginPrompted(false);
-        // Clear the URL parameters to avoid re-triggering the useEffect
         window.history.replaceState({}, document.title, "/");
       } else {
         console.error('Failed to obtain access token:', data);
@@ -79,98 +83,87 @@ const Activities = () => {
     }
   };
 
-  // Function to make an API request to Strava with access token
-  // Neu token het han thi se thong bao va yeu cau dang nhap lai
-  const [activityList, setActivityList] = useState([]);
   useEffect(() => {
+    if (!accessToken || !tokenExpiry || new Date().getTime() >= tokenExpiry) {
+      return;
+    }
+
     const fetchAthleteData = async () => {
-        if (!accessToken || new Date().getTime() >= tokenExpiry) {
-            console.error('Access token không có sẵn hoặc đã hết hạn');
-            if (!isLoginPrompted) {
-                setIsLoginPrompted(true);
-                handleLogin(); // Yêu cầu người dùng đăng nhập lại
-            }
-            return;
-        }
+      try {
+        const response = await fetch('https://www.strava.com/api/v3/athlete/activities', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
-        try {
-            const response = await fetch('https://www.strava.com/api/v3/athlete/activities', {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-
-            const data = await response.json();
-            setActivityList(data);
-            console.log('Athlete data:', data);
-        } catch (error) {
-            console.error('Error fetching athlete data:', error);
-        }
+        const data = await response.json();
+        setActivityList(data);
+        console.log('Athlete data:', data);
+      } catch (error) {
+        console.error('Error fetching athlete data:', error);
+      }
     };
 
-    if (accessToken && new Date().getTime() < tokenExpiry) {
-        console.log("token:",accessToken);
-        fetchAthleteData();
-    }
+    fetchAthleteData();
   }, [accessToken, tokenExpiry]);
 
   return (
-      <React.Fragment>
-        <Header />
-        <section>
-          <div className='content-frame'>
-            {/* <div>
-            {!accessToken && (
-                <button onClick={handleLogin}>Login with Strava</button>
-            )}
-            </div> */}
-            <div className='d-flex align-items-center m-3 border-bottom border-dark'>
-              <h5 className="card-title mb-3">Your Activities</h5>
-            </div>
-            <div className='activities-list'>
+    <React.Fragment>
+      <Header />
+      <section>
+        <div className='content-frame'>
+          <div className='d-flex align-items-center m-3 border-bottom border-dark'>
+            <h5 className="card-title mb-3">Club Activities</h5>
+          </div>
+          <div className='activities-list'>
             {activityList.map((item) => (
-              <div className='activity-card'>
-                  <div key = {item.id} className='d-flex align-items-center justify-content-center py-2 border-bottom border-dark'>
-                    <h5 className="card-title">{item.name}</h5>
+              <div className='activity-card' key={item.id}>
+                <div className='d-flex align-items justify-content-between px-2 py-2 border-bottom border-dark'>
+                  <span className="card-title">Phan Thanh Minh</span>
+                  <span className="card-title">{item.name}</span>
+                </div>
+                <div className='activity-detail'>
+                  <div className='activity-info'>
+                    <h6>Date: </h6>
+                    <span>{item.start_date.split('T')[0]}</span>
                   </div>
-                  <div className='activity-detail'>
-                    <div className='activity-info'>
-                      <h6>Distance: </h6>
-                      <span>{item.distance} meters</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Moving time: </h6>
-                      <span>{item.moving_time} seconds</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Elevation: </h6>
-                      <span>{item.total_elevation_gain} seconds</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Avarege speed: </h6>
-                      <span>{item.average_speed} m/s</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Max speed: </h6>
-                      <span>{item.max_speed} m/s</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Elapsed time: </h6>
-                      <span>{item.elapsed_time} seconds</span>
-                    </div>
-                    <div className='activity-info'>
-                      <h6>Type: </h6>
-                      <span>{item.type}</span>
-                    </div>
+                  <div className='activity-info'>
+                    <h6>Distance: </h6>
+                    <span>{item.distance} meters</span>
                   </div>
+                  <div className='activity-info'>
+                    <h6>Moving time: </h6>
+                    <span>{item.moving_time} seconds</span>
+                  </div>
+                  <div className='activity-info'>
+                    <h6>Elevation: </h6>
+                    <span>{item.total_elevation_gain} seconds</span>
+                  </div>
+                  <div className='activity-info'>
+                    <h6>Average speed: </h6>
+                    <span>{item.average_speed} m/s</span>
+                  </div>
+                  <div className='activity-info'>
+                    <h6>Max speed: </h6>
+                    <span>{item.max_speed} m/s</span>
+                  </div>
+                  <div className='activity-info'>
+                    <h6>Elapsed time: </h6>
+                    <span>{item.elapsed_time} seconds</span>
+                  </div>
+                  <div className='activity-info'>
+                    <h6>Type: </h6>
+                    <span>{item.type}</span>
+                  </div>
+                </div>
               </div>
             ))}
-            </div>
           </div>
-          <RightSidebar />
-        </section>
-        <Footer/>
-      </React.Fragment>
+        </div>
+        <RightSidebar />
+      </section>
+      <Footer/>
+    </React.Fragment>
   );
 };
 

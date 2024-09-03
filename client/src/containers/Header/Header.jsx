@@ -142,9 +142,11 @@ const Header = () => {
                         Approve
                     </NavLink>
                 )}
-                <NavLink to='/activities' className='child-content'>
-                    Activities
-                </NavLink>
+                {role === "Manager" && (
+                    <NavLink to='/activities' className='child-content'>
+                        Activities
+                    </NavLink>
+                 )}
                 {localStorage.getItem('role') == 'Manager' ? (
                     <NavLink to='/create-account' className='child-content'>
                         Create Account
