@@ -66,6 +66,33 @@ const EditProfile = () => {
     }
   };
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setEmployee({
+        ...employee,
+        [name]: value
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log("WFH Info: ", employee);
+    // API gửi request
+    try {
+      const response = await axios.post(`http://localhost:8080/api/requests`, employee);
+      console.log('Response:', response.data);
+      if (response.status === 200) {
+          alert('Gửi yêu cầu thành công');
+      } else {
+          const message = response.data.message || 'An error occurred while update';
+          alert(message);
+      }
+    } catch (error) {
+        const message = error.response?.data?.message || 'An error occurred while update';
+        alert(message)
+    }
+  };
+
   return (
       <React.Fragment>
         <Header />
@@ -98,7 +125,7 @@ const EditProfile = () => {
                 <div align="right">
                   <NavLink to="/profile" className="btn btn-secondary">Trở về</NavLink>
                 </div>
-                <form>
+                <form onSubmit={(e) => handleSubmit(e)}>
                   <table className="info-table table table-bordered">
                     <tbody>
                     <tr>
@@ -106,34 +133,81 @@ const EditProfile = () => {
                       <td>
                         <DatePicker
                             selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)}
+                            // onChange={(date) => setSelectedDate(date)}
                             dateFormat="dd/MM/yyyy"
                             className="form-control"
+                            disabled
                         />
                       </td>
                     </tr>
                     <tr>
                       <td className="title">Số điện thoại:</td>
-                      <td><input className="form-control" type="number" name="phone" defaultValue={employee.phoneNumber} /></td>
+                      <td>
+                        <input 
+                            className="form-control" 
+                            type="number" 
+                            name="phoneNumber" 
+                            defaultValue={employee.phoneNumber} 
+                            onChange={handleChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td className="title">Địa chỉ:</td>
-                      <td><input className="form-control" type="text" name="address" defaultValue={employee.address} /></td>
+                      <td>
+                        <input 
+                            className="form-control" 
+                            type="text" 
+                            name="address" 
+                            defaultValue={employee.address} 
+                            onChange={handleChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td className="title">CCCD:</td>
-                      <td><input className="form-control" type="number" name="identify" defaultValue={employee.identifyId} /></td>
+                      <td>
+                        <input 
+                            className="form-control" 
+                            type="number" 
+                            name="identifyId" 
+                            defaultValue={employee.identifyId} 
+                            onChange={handleChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td className="title">Mã số thuế:</td>
-                      <td><input className="form-control" type="number" name="tax" defaultValue={employee.taxNumber} /></td>
+                      <td>
+                        <input 
+                            className="form-control" 
+                            type="number" 
+                            name="taxNumber" 
+                            defaultValue={employee.taxNumber} 
+                            onChange={handleChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td className="title">STK ngân hàng:</td>
-                      <td><input className="form-control" type="number" name="bank_account" defaultValue={employee.bankNumber} /></td>
+                      <td>
+                        <input 
+                            className="form-control" 
+                            type="number" 
+                            name="bankNumber" 
+                            defaultValue={employee.bankNumber} 
+                            onChange={handleChange}
+                        />
+                      </td>
                     </tr>
                     </tbody>
                   </table>
+                  <div align="right">
+                    <button class="btn btn-primary" type="submit">
+                      Xác nhận
+                    </button>
+                  </div>
+                  
                 </form>
               </div>
             </div>
