@@ -1,3 +1,4 @@
+import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import './App.scss';
 
@@ -10,22 +11,45 @@ import UpdateTimeSheet from './containers/UpdateTimeSheet/UpdateTimeSheet' ;
 import WorkFromHome from './containers/WorkFromHome/WorkFromHome';
 import Approve from './containers/Approve/Approve';
 import Activities from './containers/Activities/Activities';
+import ProtectedRoute from './services/ProtectedRoute';
 
 
 function App() {
+  const role = localStorage.getItem('role');
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/edit-profile" element={<EditProfile />} />
-      <Route path="/create-account" element={<CreateAccount />} />
-      <Route path="/leave" element={<Leave />} />
-      <Route path="/update-time-sheet" element={<UpdateTimeSheet />} />
-      <Route path="/work-from-home" element={<WorkFromHome />} />
-      <Route path="/approve" element={<Approve />} />
-      <Route path="/activities" element={<Activities />} />
+      <Route
+        path="/create-account"
+        element={
+          <ProtectedRoute roles={['Manager']} element={<CreateAccount />} />
+        }
+      />
+      <Route
+        path="/approve"
+        element={<ProtectedRoute roles={['Manager']} element={<Approve />} />}
+      />
+      <Route
+        path="/activities"
+        element={<ProtectedRoute roles={['Manager']} element={<Activities />} />}
+      />
+      <Route
+        path="/leave"
+        element={<ProtectedRoute roles={['Employee']} element={<Leave />} />}
+      />
+      <Route
+        path="/update-time-sheet"
+        element={
+          <ProtectedRoute roles={['Employee']} element={<UpdateTimeSheet />} />
+        }
+      />
+      <Route
+        path="/work-from-home"
+        element={<ProtectedRoute roles={['Employee']} element={<WorkFromHome />} />}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
-
     </Routes>
   );
 }
