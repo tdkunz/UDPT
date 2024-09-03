@@ -62,7 +62,7 @@ const GivePoint = () => {
         })
       };
       fetchData();
-      setEmployees([{'name': 'Nguyễn Văn A', 'point': 123},{'name': 'Lê Văn B', 'point': 456}])
+    //   setEmployees([{'name': 'Nguyễn Văn A', 'point': 123},{'name': 'Lê Văn B', 'point': 456}])
   }, []);
 
   const handleSubmit = async (event) => {
