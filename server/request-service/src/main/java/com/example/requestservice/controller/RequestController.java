@@ -30,12 +30,12 @@ public class RequestController {
     }
 
     @PutMapping("/{id}/approve")
-    public Request approveRequest(@PathVariable String id,  String status) {
+    public Request approveRequest(@PathVariable String id, @RequestParam String status) {
         return requestService.approveRequest(id, status);
     }
 
     @PutMapping("/{id}/reject")
-    public Request rejectRequest(@PathVariable String id, @PathVariable String status, @PathVariable String reasonReject) {
+    public Request rejectRequest(@PathVariable String id, @RequestParam String status, @RequestParam String reasonReject) {
         return requestService.rejectRequest(id, status, reasonReject);
     }
     @GetMapping("/not-approved")
