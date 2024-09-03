@@ -10,7 +10,7 @@ import UpdateTimeSheet from './containers/UpdateTimeSheet/UpdateTimeSheet' ;
 import WorkFromHome from './containers/WorkFromHome/WorkFromHome';
 import Approve from './containers/Approve/Approve';
 import Activities from './containers/Activities/Activities';
-
+import GivePoint from './containers/GivePoint/GivePoint';
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
       <Route path="/work-from-home" element={<WorkFromHome />} />
       <Route path="/approve" element={<Approve />} />
       <Route path="/activities" element={<Activities />} />
+      <Route path="/give-point" element={<GivePoint />} />
       <Route path="*" element={<Navigate to="/" replace />} />
 
     </Routes>

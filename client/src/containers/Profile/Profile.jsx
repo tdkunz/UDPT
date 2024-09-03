@@ -53,9 +53,14 @@ const Profile = () => {
                 <div className="col">
                   <button type="button" className="btn btn-danger">Đổi điểm</button>
                 </div>
-                <div className="col-7">
-                  <button type="button" className="btn btn-success">Tham gia hoạt động</button>
-                </div>
+                {localStorage.getItem('role') == 'Manager' ? (
+                  <div className="col-7">
+                    <a href="give-point" type="button" className="btn btn-success">Cho điểm</a>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                
               </div>
             </div>
 
