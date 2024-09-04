@@ -25,21 +25,8 @@
                 z-index: 10;
             }
     
-            .mini-profile{
-                text-align: center;
-                width: fit-content;
-                font-size: 16px;
-                border: 2px solid #1b1b1b;
-                border-radius: 5px;
-                background-color: #ffffff;
-                padding: 5px 5px 5px 10px;
-                justify-content: center;
-                align-items: center;
-                display: inline-block;
-                user-select: none;
-                cursor: pointer;
-                transition: 0.1s ease;
-                color: #000;
+            .btn-light{
+              
                 
                 p{
                     display: inline-block;

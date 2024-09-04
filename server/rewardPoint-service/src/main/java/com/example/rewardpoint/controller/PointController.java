@@ -29,4 +29,10 @@ public class PointController {
     public Optional<Point> getDetailPointRecord(@PathVariable Long uid) {
         return pointService.getDetailPointRecord(uid);
     }
+
+
+    @PostMapping("/send")
+    public Point sendPoint(@RequestParam Long managerId, @RequestParam Long giverUid, @RequestParam Long receiverUid, @RequestParam Long points, @RequestParam String message) {
+        return pointService.sendPoint(managerId, giverUid, receiverUid, points, message);
+    }
 }

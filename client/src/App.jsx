@@ -11,6 +11,7 @@ import UpdateTimeSheet from './containers/UpdateTimeSheet/UpdateTimeSheet' ;
 import WorkFromHome from './containers/WorkFromHome/WorkFromHome';
 import Approve from './containers/Approve/Approve';
 import Activities from './containers/Activities/Activities';
+import GivePoint from './containers/GivePoint/GivePoint';
 import ProtectedRoute from './services/ProtectedRoute';
 
 
@@ -21,6 +22,7 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/edit-profile" element={<EditProfile />} />
+      
       <Route
         path="/create-account"
         element={
@@ -49,7 +51,12 @@ function App() {
         path="/work-from-home"
         element={<ProtectedRoute roles={['Employee']} element={<WorkFromHome />} />}
       />
+      <Route 
+        path="/give-point" 
+        element={<ProtectedRoute roles={['Manager']} element={<GivePoint />} />}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
+     
     </Routes>
   );
 }
