@@ -12,6 +12,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
     const [accept, setAccept] = useState('Chưa duyệt');
     const [error, setError] = useState('');
     const [requestData, setRequestData] = useState([]);
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,10 +91,14 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
     };
 
     useEffect(() => {
-        if (accept !== "Chưa duyệt") {
-            console.log("Request Info: ", requestInfo)
-        }
-    }, [accept]);
+        setIsSubmitDisabled(rejectionReason.trim() !== '');
+    }, [rejectionReason]);
+
+    // useEffect(() => {
+    //     if (accept !== "Chưa duyệt") {
+    //         console.log("Request Info: ", requestInfo)
+    //     }
+    // }, [accept]);
 
     return (
         <Modal show={show} onHide={handleClose} size='lg'>
@@ -254,8 +259,8 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                 <Button variant="danger" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleReject}>
                     Từ chối
                 </Button>
-                <Button variant="primary" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleSubmit}>
-                    Duyệt
+                <Button variant="primary" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleSubmit} disabled={isSubmitDisabled}>
+                    Chấp thuận
                 </Button>
             </Modal.Footer>
         </Modal>
