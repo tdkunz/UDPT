@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import {Modal, Button} from 'react-bootstrap';
-
+import { Modal, Button } from 'react-bootstrap';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-
-import './Profile.scss';
 import axios from 'axios';
+import './Profile.scss';
 
 const Profile = () => {
   const [employee, setEmployee] = useState({});
   const [point, setPoint] = useState({});
-
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
   useEffect(() => {
-    const employeeId = localStorage.getItem('userid'); // Retrieve employee ID from local storage
-    console.log(employeeId);
+    const employeeId = localStorage.getItem('userid');
 
     const fetchEmployee = async () => {
       try {
         const response = await axios.get(`http://localhost:8081/api/employees/${employeeId}`);
-        console.log(response.data);
         setEmployee(response.data);
       } catch (error) {
         console.error('Error fetching employee data:', error);
@@ -41,7 +35,7 @@ const Profile = () => {
     };
 
     fetchEmployee();
-    fetchPoint(); // Call fetchPoint function here
+    fetchPoint();
   }, []);
 
   return (
@@ -64,17 +58,14 @@ const Profile = () => {
                 </div>
                 <div className="col-6">
                   <Button variant="primary" onClick={handleShow}>
-                    lịch sử nhận điểm 
+                    Lịch sử nhận điểm
                   </Button>
                 </div>
-                {localStorage.getItem('role') == 'Manager' ? (
-                  <div className="col">
-                    <a href="give-point" type="button" className="btn btn-success">Cho điểm</a>
-                  </div>
-                ) : (
-                  <></>
-                )}
-                
+                {localStorage.getItem('role') === 'Manager' ? (
+                    <div className="col">
+                      <a href="give-point" type="button" className="btn btn-success">Cho điểm</a>
+                    </div>
+                ) : null}
               </div>
             </div>
 
@@ -84,7 +75,7 @@ const Profile = () => {
                   <a href="/edit-profile" type="button" className="btn btn-primary">Chỉnh sửa</a>
                 </div>
 
-                <table className="info-table table table-bordered" bordered>
+                <table className="info-table table table-bordered">
                   <tbody>
                   <tr>
                     <td className="title">Ngày sinh:</td>
@@ -122,29 +113,32 @@ const Profile = () => {
             <Modal.Title><b>Lịch sử nhận điểm</b></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <table>
+            <table className="table">
+              <thead>
               <tr>
                 <th>Điểm nhận được</th>
                 <th>Lời nhắn</th>
               </tr>
-              <tr>
-                {point.historyPoints.map((pnt) => {
-                  <>
-                  <td>{pnt.pointsSent}</td>
-                  <td>{pnt.message}</td>
-                  </>
-                  
-                })}
-              </tr>
+              </thead>
+              <tbody>
+              {point.historyPoints && point.historyPoints.length > 0 ? (
+                  point.historyPoints.map((pnt, index) => (
+                      <tr key={index}>
+                        <td>{pnt.pointsSent}</td>
+                        <td>{pnt.message || 'Không có lời nhắn'}</td>
+                      </tr>
+                  ))
+              ) : (
+                  <tr>
+                    <td colSpan="2">Không có dữ liệu</td>
+                  </tr>
+              )}
+              </tbody>
             </table>
-            
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
             </Button>
           </Modal.Footer>
         </Modal>

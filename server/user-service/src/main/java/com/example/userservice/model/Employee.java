@@ -14,7 +14,6 @@ public class Employee {
 
     @Column(unique = true)
     private String identifyId;
-
     private String name;
     private String birthDate;
 

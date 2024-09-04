@@ -36,7 +36,7 @@ const GivePoint = () => {
         const fetchData = async () => {
             try {
                 const employeeResponse = await axios.get(`http://localhost:8081/api/employees`);
-                const pointResponse = await axios.get(`http://localhost:8080/api/points`);
+                const pointResponse = await axios.get(`http://localhost:8084/api/points`);
 
                 if (employeeResponse.status === 200 && pointResponse.status === 200) {
                     const employees = employeeResponse.data;

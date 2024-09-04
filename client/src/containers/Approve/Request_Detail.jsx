@@ -8,11 +8,10 @@ import './Request_Detail.scss';
 
 export function RequestDetail({show, id, handleClose, handleConfirm}) {
 
-    const [rejectionReason, setRejectionReason] = useState(null);
+    const [rejectionReason, setRejectionReason] = useState('');
     const [accept, setAccept] = useState('Chưa duyệt');
     const [error, setError] = useState('');
     const [requestData, setRequestData] = useState([]);
-    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,6 +21,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                     const response = await axios.get(`http://localhost:8082/api/requests/${id}`);
                     if (response.status === 200) {
                         setRequestData(response.data);
+                        setRejectionReason(response.data.reasonReject);
                     } else {
                         console.error("Error fetching user data");
                     }
@@ -90,15 +90,6 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
         }
     };
 
-    useEffect(() => {
-        setIsSubmitDisabled(rejectionReason.trim() !== '');
-    }, [rejectionReason]);
-
-    // useEffect(() => {
-    //     if (accept !== "Chưa duyệt") {
-    //         console.log("Request Info: ", requestInfo)
-    //     }
-    // }, [accept]);
 
     return (
         <Modal show={show} onHide={handleClose} size='lg'>
@@ -238,9 +229,9 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                             <Form.Control
                                 as="textarea"
                                 placeholder="Lý do từ chối"
-                                value={requestData.reasonReject}
+                                value={rejectionReason}
                                 onChange={(e) => setRejectionReason(e.target.value)}
-                                disabled={accept !== 'Chưa duyệt'}
+                                disabled={requestData.status !== 'Chưa duyệt'}
                                 style={{
                                     backgroundColor: requestData.status !== 'Chưa duyệt' ? '' : '#fff',
                                     color: requestData.status !== 'Chưa duyệt' ? '#000' : '#888',
@@ -256,10 +247,10 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                 <Button variant="secondary" onClick={handleClose}>
                     Thoát
                 </Button>
-                <Button variant="danger" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleReject}>
+                <Button variant="danger" className={`${requestData.status !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleReject}>
                     Từ chối
                 </Button>
-                <Button variant="primary" className={`${accept !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleSubmit} disabled={isSubmitDisabled}>
+                <Button variant="primary" className={`${requestData.status !== 'Chưa duyệt' ? 'd-none' : ''}`} onClick={handleSubmit} disabled={rejectionReason !== ''}>
                     Chấp thuận
                 </Button>
             </Modal.Footer>
