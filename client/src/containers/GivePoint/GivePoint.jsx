@@ -9,7 +9,6 @@ import './GivePoint.scss';
 
 const GivePoint = () => {
   const [employees, setEmployees] = useState([]);
-  const [points, setPoints] = useState([]);
   
   const [show, setShow] = useState(false);
   const [curEmp, setCurEmp] = useState({
@@ -21,7 +20,18 @@ const GivePoint = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [formData, setFormData] = useState({
+    point: '',
+    message: ''
+  });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -49,14 +59,14 @@ const GivePoint = () => {
                 console.error("Error during API request:", error);
             }
         };
-
+        setEmployees([{'name': 'Nguyễn Văn A', 'point': 123},{'name': 'Lê Văn B', 'point': 456}])
         fetchData();
     }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`API_URL`, {/*data*/});
+      const response = await axios.post(`API_URL`, formData);
       console.log('Response:', response.data);
       if (response.status === 200) {
           alert('Gửi yêu cầu thành công');
@@ -153,11 +163,22 @@ const GivePoint = () => {
                 
                 <Form>
                     <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                    <Form.Label className='fw-bold'>Điểm được cho: </Form.Label>
-                    <Form.Control
-                        type="number"
-                        name="point"
-                    />
+                      <Form.Label className='fw-bold'>Điểm được cho: </Form.Label>
+                      <Form.Control
+                          type="number"
+                          name="point"
+                          onChange={handleChange}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                      <Form.Label className='fw-bold'>Loi nhan: </Form.Label>
+                      <Form.Control
+                          as="textarea"
+                          name="message"
+                          row={3}
+                          onChange={handleChange}
+                      />
                     </Form.Group>
                 </Form>
                 
