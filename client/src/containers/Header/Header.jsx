@@ -104,7 +104,7 @@ const Header = () => {
                     ) : (
                         <div>
                             <NavLink to="/profile">
-                                <div className="mini-profile">
+                                <div className="btn btn-light">
                                     <p>
                                         <b>{fullName}</b>
                                     </p>
