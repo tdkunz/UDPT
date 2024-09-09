@@ -32,7 +32,7 @@ public class PointController {
 
 
     @PostMapping("/send")
-    public Point sendPoint(@RequestParam Long managerId, @RequestParam Long giverUid, @RequestParam Long receiverUid, @RequestParam Long points, @RequestParam String message) {
-        return pointService.sendPoint(managerId, giverUid, receiverUid, points, message);
+    public Point sendPoint(@RequestParam Long managerId, @RequestParam Long employeeId, @RequestParam Long points, @RequestParam String message) {
+        return pointService.sendPoint(managerId, employeeId, points, message);
     }
 }

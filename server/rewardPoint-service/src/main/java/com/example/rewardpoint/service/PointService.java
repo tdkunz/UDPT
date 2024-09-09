@@ -44,7 +44,7 @@ public class PointService {
         return pointRepository.findByUid(uid);
     }
 
-    @Scheduled(cron = "0 0 0 1 * ?") // Runs every 30 seconds
+    @Scheduled(cron = "0 0 0 1 * ?") // Run at midnight on the first day of every month
     public void addMonthlyPoints() {
         logger.info("Running scheduled task: addMonthlyPoints");
         List<Point> allPoints = pointRepository.findAll();
@@ -54,49 +54,49 @@ public class PointService {
             logger.info("Updated totalPoint for uid {}: {}", point.getUid(), point.getTotalPoint());
         }
     }
-
+/**/
 
     @Transactional
-    public Point sendPoint(Long managerId, Long giverUid, Long receiverUid, Long points, String message) {
-        Optional<Point> giverOptional = pointRepository.findByUid(giverUid);
-        Optional<Point> receiverOptional = pointRepository.findByUid(receiverUid);
+    public Point sendPoint(Long managerId, Long employeeId, Long points, String message) {
+        Optional<Point> managerOptional = pointRepository.findByUid(managerId);
+        Optional<Point> employeeOptional = pointRepository.findByUid(employeeId);
 
-        if (giverOptional.isPresent() && receiverOptional.isPresent()) {
-            Point giver = giverOptional.get();
-            Point receiver = receiverOptional.get();
+        if (managerOptional.isPresent() && employeeOptional.isPresent()) {
+            Point manager = managerOptional.get();
+            Point employee = employeeOptional.get();
 
-            if (giver.getTotalPoint() < points) {
-                throw new IllegalArgumentException("Insufficient points to send");
+            if (manager.getTotalPoint() < points) {
+                throw new IllegalArgumentException("Số dư điểm không đủ để thực hiện. Vui lòng thử lại!");
             }
 
-            // Deduct points from giver
-            giver.setBonusPoint(giver.getBonusPoint() - points);
-            giver.setTotalPoint(giver.getTotalPoint() - points);
+            // Deduct points from manager
+            manager.setBonusPoint(manager.getBonusPoint() - points);
+            manager.setTotalPoint(manager.getTotalPoint() - points);
 
-            // Add points to receiver
-            receiver.setBonusPoint(receiver.getBonusPoint() + points);
-            receiver.setTotalPoint(receiver.getTotalPoint() + points);
+            // Add points to employee
+            employee.setBonusPoint(employee.getBonusPoint() + points);
+            employee.setTotalPoint(employee.getTotalPoint() + points);
 
-            // Create history point for receiver
-            HistoryPoint historyPointReceiver = new HistoryPoint();
-            historyPointReceiver.setId(new ObjectId());
-            historyPointReceiver.setManagerId(managerId);
-            historyPointReceiver.setPointsSent(points);
-            historyPointReceiver.setDateSent(new Date());
-            historyPointReceiver.setMessage(message);
-            receiver.getHistoryPoints().add(historyPointReceiver);
+            // Create history point for employee
+            HistoryPoint historyPointEmployee = new HistoryPoint();
+            historyPointEmployee.setId(new ObjectId());
+            historyPointEmployee.setManagerId(managerId);
+            historyPointEmployee.setPointsSent(points);
+            historyPointEmployee.setDateSent(new Date());
+            historyPointEmployee.setMessage(message);
+            employee.getHistoryPoints().add(historyPointEmployee);
 
-            // Create history point for giver
-            HistoryPoint historyPointGiver = new HistoryPoint();
-            historyPointGiver.setId(new ObjectId());
-            historyPointGiver.setManagerId(managerId);
-            historyPointGiver.setPointsSent(-points);
-            historyPointGiver.setDateSent(new Date());
-            historyPointGiver.setMessage("Sent points to UID: " + receiverUid);
-            giver.getHistoryPoints().add(historyPointGiver);
+            // Create history point for manager
+            HistoryPoint historyPointManager = new HistoryPoint();
+            historyPointManager.setId(new ObjectId());
+            historyPointManager.setManagerId(managerId);
+            historyPointManager.setPointsSent(-points);
+            historyPointManager.setDateSent(new Date());
+            historyPointManager.setMessage("Sent points to UID: " + employeeId);
+            manager.getHistoryPoints().add(historyPointManager);
 
-            pointRepository.save(giver);
-            return pointRepository.save(receiver);
+            pointRepository.save(manager);
+            return pointRepository.save(employee);
         }
         return null;
     }
