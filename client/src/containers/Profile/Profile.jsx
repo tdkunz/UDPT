@@ -104,8 +104,35 @@ const Profile = () => {
                   </tbody>
                 </table>
               </div>
+
             </div>
           </div>
+          <div className="voucher-history">
+            <h5>Lịch sử đổi voucher</h5>
+            <hr></hr>
+            <table class="table table-hover voucher-table">
+              <thead>
+                  <tr>
+                  <th scope="col">Tên Voucher</th>
+                  <th scope="col">Mã Voucher</th>
+                  <th scope="col">Nội dung</th>
+                  <th scope="col">Ngày hết hạn</th>
+                  <th scope="col">Point</th>
+                  
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td><b>Voucher 1</b></td>
+                      <td><i>ABCXYZ</i></td>
+                      <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />Voluptas nulla beatae nihil aut fugit, obcaecati, unde saepe, rerum incidunt<br /> inventore illo pariatur natus deserunt error magni? Fuga rerum ea reiciendis?</td>
+                      <td>1/1/1970</td>
+                      <td class="point">123</td>
+                  </tr>
+              
+              </tbody>
+            </table>
+              </div>
         </div>
         <Footer />
         <Modal show={show} onHide={handleClose}>
