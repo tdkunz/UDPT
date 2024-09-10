@@ -148,7 +148,7 @@ const Header = () => {
                     </NavLink>
                  )}
                 <NavLink to='/voucher' className='child-content'>
-                    Activities
+                    Voucher
                 </NavLink>
                 {localStorage.getItem('role') == 'Manager' ? (
                     <NavLink to='/create-account' className='child-content'>
