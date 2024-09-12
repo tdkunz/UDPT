@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {Button, Modal, Form} from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Header from '../Header/Header';
@@ -94,7 +96,19 @@ const Voucher = () => {
 
                     </div>
 
-                    <table class="table table-hover voucher-table">
+                    <Nav variant="tabs" className="voucher-type" defaultActiveKey="link-1">
+                        <Nav.Item>
+                            <Nav.Link eventKey="link-1">Ăn uống</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="link-2">Thanh toán hóa đơn</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link eventKey="link-3">Giải trí</Nav.Link>
+                        </Nav.Item>
+                    </Nav>
+                    
+                    <table class="table table-hover" id="link-1">
                         <thead>
                             <tr>
                             <th scope="col">Tên Voucher</th>
@@ -118,6 +132,57 @@ const Voucher = () => {
                         
                         </tbody>
                     </table>
+
+                    {/* <table class="table table-hover" id="link-2">
+                        <thead>
+                            <tr>
+                            <th scope="col">Tên Voucher</th>
+                            <th scope="col">Mã Voucher</th>
+                            <th scope="col">Nội dung</th>
+                            <th scope="col">Ngày hết hạn</th>
+                            <th scope="col">Point</th>
+                            <th scope="col"></th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Voucher 1</b></td>
+                                <td><i>ABCXYZ</i></td>
+                                <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />Voluptas nulla beatae nihil aut fugit, obcaecati, unde saepe, rerum incidunt<br /> inventore illo pariatur natus deserunt error magni? Fuga rerum ea reiciendis?</td>
+                                <td>1/1/1970</td>
+                                <td class="point">123</td>
+                                <td><button class="btn btn-primary">Đổi voucher</button></td>
+                            </tr>
+                        
+                        </tbody>
+                    </table>
+
+                    <table class="table table-hover" id="link-3" >
+                        <thead>
+                            <tr>
+                            <th scope="col">Tên Voucher</th>
+                            <th scope="col">Mã Voucher</th>
+                            <th scope="col">Nội dung</th>
+                            <th scope="col">Ngày hết hạn</th>
+                            <th scope="col">Point</th>
+                            <th scope="col"></th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Voucher 1</b></td>
+                                <td><i>ABCXYZ</i></td>
+                                <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />Voluptas nulla beatae nihil aut fugit, obcaecati, unde saepe, rerum incidunt<br /> inventore illo pariatur natus deserunt error magni? Fuga rerum ea reiciendis?</td>
+                                <td>1/1/1970</td>
+                                <td class="point">123</td>
+                                <td><button class="btn btn-primary">Đổi voucher</button></td>
+                            </tr>
+                        
+                        </tbody>
+                    </table> */}
+                    
                 </div>
                 <RightSidebar />
             </section>

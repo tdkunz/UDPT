@@ -21,7 +21,8 @@
         }
     }
 
-    .voucher-table{
+    
+    .table{
         text-align: center;
         vertical-align: middle;
         .point{
@@ -30,8 +31,19 @@
         }
     }
     
+    
+    
+    .nav-tabs .nav-link.active {
+        font-weight: bold !important;
+    }
+    
+    .nav-tabs .nav-link{
+        color: black;
+    }
+
 }
 
 .row {
     margin-left: 0 !important;
 }
+
