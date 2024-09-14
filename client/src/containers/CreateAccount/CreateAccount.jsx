@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
 import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 import RightSidebar from '../RightSidebar/RightSidebar';
 import './CreateAccount.scss';
 
@@ -155,6 +156,7 @@ const CreateAccount = () => {
                 </div>
                 <RightSidebar />
             </section>
+            <Footer /> 
         </React.Fragment>
     );
 };

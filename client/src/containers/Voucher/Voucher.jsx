@@ -5,6 +5,7 @@ import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Header from '../Header/Header';
+import Footer from '../Footer/Footer';
 import RightSidebar from '../RightSidebar/RightSidebar';
 import './Voucher.scss';
 
@@ -305,7 +306,9 @@ const Voucher = () => {
                     </Modal>
                 </div>
                 <RightSidebar />
+                
             </section>
+            <Footer />
         </React.Fragment>
     );
 };
