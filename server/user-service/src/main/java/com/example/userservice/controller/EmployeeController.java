@@ -67,4 +67,11 @@ public class EmployeeController {
         return ResponseEntity.ok(response);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PutMapping("/update-checkin-checkout")
+    public ResponseEntity<String> updateCheckInCheckOut(@RequestParam Long userId, @RequestParam String day, @RequestParam String checkIn, @RequestParam String checkOut) {
+        String response = employeeService.updateCheckInCheckOut(userId, day, checkIn, checkOut);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Form, Button } from "react-bootstrap";
@@ -16,6 +16,8 @@ import './Leave.scss';
 const Leave = () => {
   const [leaveMethod, setLeaveMethod] = useState('oneday');
   const [userData, setUserData] = useState('');
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [selectedLeaveRequest, setSelectedLeaveRequest] = useState(null);
   const userId = localStorage.getItem('userid');
   const today = new Date();
 
@@ -28,7 +30,8 @@ const Leave = () => {
     reason: ''
   });
 
-  const handleShowDetail = () => {
+  const handleShowDetail = (request) => {
+    setSelectedLeaveRequest(request);
     setIsOpenDetail(true);
   }
 
@@ -50,25 +53,11 @@ const Leave = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
-  // API lấy thông tin user :V
+  // API lấy thông tin user và danh sách nghỉ phép
   useEffect(() => {
     const fetchData = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/employees/${userId}`);
-            if (response.status === 200) {
-                setUserData(response.data);
-                console.log(response.data);
-            } else {
-                console.error("Error fetching user data");
-            }
-        } catch (error) {
-            console.error("Error during API request:", error);
-        }
-    };
-
-    const fetchLeaveList = async () => {
       try {
-        const response = await axios.get(`http://localhost:8082/api/requests/leave`);
+        const response = await axios.get(`http://localhost:8080/api/employees/${userId}`);
         if (response.status === 200) {
           setUserData(response.data);
           console.log(response.data);
@@ -79,18 +68,35 @@ const Leave = () => {
         console.error("Error during API request:", error);
       }
     };
+
+    const fetchLeaveList = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/requests/leave`);
+        if (response.status === 200) {
+          const filteredLeaveRequests = response.data.filter(request => request.employeeId === userId);
+          setLeaveRequests(filteredLeaveRequests);
+          console.log(filteredLeaveRequests);
+        } else {
+          console.error("Error fetching leave requests");
+        }
+      } catch (error) {
+        console.error("Error during API request:", error);
+      }
+    };
+
     fetchData();
-  }, []);
+    fetchLeaveList();
+  }, [userId]);
 
   const handleDateChange = (date, name) => {
     if (leaveMethod === 'oneday') {
       // Đặt giờ phút cho timeStart là 00:00 và timeEnd là 23:59
       const startDate = new Date(date);
       startDate.setHours(0, 0, 0, 0);
-  
+
       const endDate = new Date(date);
       endDate.setHours(23, 59, 59, 999);
-  
+
       setLeaveData({
         ...leaveData,
         timeStart: startDate,
@@ -103,7 +109,7 @@ const Leave = () => {
       } else if (name === 'timeEnd') {
         updatedDate.setHours(23, 59, 59, 999);
       }
-  
+
       setLeaveData({
         ...leaveData,
         [name]: updatedDate
@@ -114,12 +120,11 @@ const Leave = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setLeaveData({
-        ...leaveData,
-        [name]: value
+      ...leaveData,
+      [name]: value
     });
   };
 
-  //xem lại khúc này
   const leaveInfo = {
     "employeeId": userData.id,
     "managerId": "2",
@@ -155,43 +160,43 @@ const Leave = () => {
       const response = await axios.post(`http://localhost:8082/api/requests`, leaveInfo);
       console.log('Response:', response.data);
       if (response.status === 200) {
-          alert('Gửi yêu cầu thành công');
+        alert('Gửi yêu cầu thành công');
       } else {
-          const message = response.data.message || 'An error occurred while login';
-          alert(message);
+        const message = response.data.message || 'An error occurred while login';
+        alert(message);
       }
     } catch (error) {
-        const message = error.response?.data?.message || 'An error occurred while update';
-        alert(message)
+      const message = error.response?.data?.message || 'An error occurred while update';
+      alert(message)
     }
   };
 
   return (
-    <React.Fragment>
+      <React.Fragment>
         <Header />
         <section>
           <div className='content-frame'>
             <div className='leave-check'>
               <div className="form-check">
                 <input className="form-check-input" type="radio" id="oneday"
-                        onClick={() => setLeaveMethod('oneday')}
-                        checked={leaveMethod === 'oneday'}/>
+                       onClick={() => setLeaveMethod('oneday')}
+                       checked={leaveMethod === 'oneday'}/>
                 <label className="form-check-label" htmlFor="oneday" onClick={() => setLeaveMethod('oneday')}>
                   Nghỉ một ngày
                 </label>
               </div>
               <div className="form-check">
                 <input className="form-check-input" type="radio" id="severaldays"
-                        onClick={() => setLeaveMethod('severaldays')}
-                        checked={leaveMethod === 'severaldays'}/>
+                       onClick={() => setLeaveMethod('severaldays')}
+                       checked={leaveMethod === 'severaldays'}/>
                 <label className="form-check-label" htmlFor="severaldays">
                   Nghỉ nhiều ngày
                 </label>
               </div>
               <div className="form-check">
                 <input className="form-check-input" type="radio" id="leaveList"
-                        onClick={() => setLeaveMethod('leaveList')}
-                        checked={leaveMethod === 'leaveList'}/>
+                       onClick={() => setLeaveMethod('leaveList')}
+                       checked={leaveMethod === 'leaveList'}/>
                 <label className="form-check-label" htmlFor="leaveList">
                   Lịch sử xin nghỉ
                 </label>
@@ -202,47 +207,33 @@ const Leave = () => {
                 <div className="leave-history">
                   <table className="table leave-table table-nowrap align-middle table-borderless">
                     <thead className='sticky-header'>
-                      <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Nghỉ từ ngày</th>
-                        <th scope="col">Đến hết ngày</th>
-                        <th scope="col">Trạng thái</th>
-                        <th scope="col">Chi tiết</th>
-                      </tr>
+                    <tr>
+                      <th scope="col">STT</th>
+                      <th scope="col">Nghỉ từ ngày</th>
+                      <th scope="col">Đến hết ngày</th>
+                      <th scope="col">Trạng thái</th>
+                      <th scope="col">Chi tiết</th>
+                    </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>26/07/2024</td>
-                        <td>26/07/2024</td>
-                        <td>
-                          <span className="badge badge-soft-success mb-0">
-                            Đã duyệt
-                          </span>
-                        </td>
-                        <td>
-                          <span className='text-decoration-underline detail'
-                                onClick={handleShowDetail}>
-                            Xem thêm
-                          </span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>26/07/2024</td>
-                        <td>26/07/2024</td>
-                        <td>
-                          <span className="badge badge-soft-danger mb-0">
-                            Từ chối
-                          </span>
-                        </td>
-                        <td>
-                          <span className='text-decoration-underline detail'
-                                onClick={handleShowDetail}>
-                            Xem thêm
-                          </span>
-                        </td>
-                      </tr>
+                    {leaveRequests.map((request, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{request.timeStart}</td>
+                          <td>{request.timeEnd}</td>
+                          <td>
+                            <span className={`badge ${request.status === 'Chấp thuận' ? 'badge-soft-success' : request.status === 'Từ chối' ? 'badge-soft-danger' : ''} mb-0`}>
+                              {request.status}
+                            </span>
+                          </td>
+                          <td>
+                            <span className='text-decoration-underline detail'
+                                  onClick={() => handleShowDetail(request)}>
+                              Xem thêm
+                            </span>
+                          </td>
+                        </tr>
+                    ))}
                     </tbody>
                   </table>
                 </div>
@@ -250,43 +241,43 @@ const Leave = () => {
             </div>
             <form action="#" onSubmit={(e) => handleSubmit(e)}>
               <div className={`datepick-frame ${leaveMethod !== 'leaveList' ? '' : 'd-none'}`}>
-                <div className='datepick'>  
+                <div className='datepick'>
                   <label className='col-sm-3 col-form-label'>Họ tên:</label>
                   <Container>
-                      <Row>
-                          <Form.Group>
-                              <Form.Control type='text'
-                                            value={userData.name}
-                                            disabled
-                              ></Form.Control>
-                          </Form.Group>
-                      </Row>
+                    <Row>
+                      <Form.Group>
+                        <Form.Control type='text'
+                                      value={userData.name}
+                                      disabled
+                        ></Form.Control>
+                      </Form.Group>
+                    </Row>
                   </Container>
                 </div>
-                <div className='datepick'>  
+                <div className='datepick'>
                   <label className='col-sm-3 col-form-label'>Bộ phận:</label>
                   <Container>
-                      <Row>
-                          <Form.Group>
-                              <Form.Control type='text'
-                                            value={userData.department}
-                                            disabled
-                              ></Form.Control>
-                          </Form.Group>
-                      </Row>
+                    <Row>
+                      <Form.Group>
+                        <Form.Control type='text'
+                                      value={userData.department}
+                                      disabled
+                        ></Form.Control>
+                      </Form.Group>
+                    </Row>
                   </Container>
                 </div>
-                <div className='datepick'>  
+                <div className='datepick'>
                   <label className='col-sm-3 col-form-label'>Số điện thoại:</label>
                   <Container>
-                      <Row>
-                          <Form.Group>
-                              <Form.Control type='text'
-                                            value={userData.phoneNumber}
-                                            disabled
-                              ></Form.Control>
-                          </Form.Group>
-                      </Row>
+                    <Row>
+                      <Form.Group>
+                        <Form.Control type='text'
+                                      value={userData.phoneNumber}
+                                      disabled
+                        ></Form.Control>
+                      </Form.Group>
+                    </Row>
                   </Container>
                 </div>
                 <div className= {`datepick ${leaveMethod === 'oneday' ? '' : 'd-none'}`}>
@@ -331,8 +322,8 @@ const Leave = () => {
                 <div className='reason-frame'>
                   <label>Lý do:</label>
                   <div className="form-group reason-input">
-                    <textarea className="form-control" 
-                              id="reason" 
+                    <textarea className="form-control"
+                              id="reason"
                               rows="3"
                               name = 'reason'
                               onChange={handleChange}
@@ -348,10 +339,11 @@ const Leave = () => {
         </section>
         <Footer />
         <DetailLeave show = {isOpenDetail}
-                      handleClose = {handleCloseDetail}
-                      handleConfirm = {handleConfirmDetail}
+                     handleClose = {handleCloseDetail}
+                     handleConfirm = {handleConfirmDetail}
+                     leaveRequest={selectedLeaveRequest}
         />
-    </React.Fragment>
+      </React.Fragment>
   );
 }
 

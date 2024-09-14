@@ -10,9 +10,9 @@ const Activities = () => {
   const [isLoginPrompted, setIsLoginPrompted] = useState(false);
   const [activityList, setActivityList] = useState([]);
 
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
-  const redirectUri = process.env.REACT_APP_REDIRECT_URI;
+  const clientId = '131434';
+  const clientSecret = 'd305058502da66473739f3aeaad4397c2cf165a2';
+  const redirectUri = 'http://localhost:3000/activities';
   const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=activity:read`;
 
   useEffect(() => {

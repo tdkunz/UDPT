@@ -26,7 +26,7 @@ const EditProfile = () => {
 
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/employees/${employeeId}`);
+        const response = await axios.get(`http://localhost:8080/api/employees/${employeeId}`);
         const employeeData = response.data;
         setEmployee(employeeData);
         const [day, month, year] = employeeData.birthDate.split('/');
@@ -43,7 +43,7 @@ const EditProfile = () => {
 
     const fetchPoint = async () => {
       try {
-        const response = await axios.get(`http://localhost:8084/api/points/${employeeId}`);
+        const response = await axios.get(`http://localhost:8080/api/points/${employeeId}`);
         setPoint(response.data);
       } catch (error) {
         console.error('Error fetching point data:', error);
@@ -120,20 +120,18 @@ const EditProfile = () => {
               <div className="point row" align="center">
                 <h5>Điểm</h5>
                 <h4>{point.totalPoint}</h4>
-                <div className="col">
-                  <button type="button" className="btn btn-danger">Đổi điểm</button>
-                </div>
+
                 <div className="col-6">
                   <Button variant="primary" onClick={handleShow}>
-                    lịch sử nhận điểm 
+                    {localStorage.getItem('role') === 'Manager' ? 'Lịch sử cho điểm' : 'Lịch sử nhận điểm'}
                   </Button>
                 </div>
                 {localStorage.getItem('role') == 'Manager' ? (
-                  <div className="col">
-                    <a href="give-point" type="button" className="btn btn-success">Cho điểm</a>
-                  </div>
+                    <div className="col">
+                      <a href="give-point" type="button" className="btn btn-success">Cho điểm</a>
+                    </div>
                 ) : (
-                  <></>
+                    <></>
                 )}
               </div>
             </div>
@@ -242,16 +240,15 @@ const EditProfile = () => {
                 <th>Lời nhắn</th>
               </tr>
               <tr>
-                {point.historyPoints.map((pnt) => {
-                  <>
-                  <td>{pnt.pointsSent}</td>
-                  <td>{pnt.message}</td>
-                  </>
-                  
-                })}
+                {point.historyPoints && point.historyPoints.map((pnt) => (
+                    <React.Fragment key={pnt.id}>
+                      <td>{pnt.pointsSent}</td>
+                      <td>{pnt.message}</td>
+                    </React.Fragment>
+                ))}
               </tr>
             </table>
-            
+
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

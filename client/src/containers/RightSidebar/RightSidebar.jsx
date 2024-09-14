@@ -75,7 +75,7 @@ const RightSidebar = () => {
         const userId = localStorage.getItem('userid');
         if (!checkInTime && userId) {
             try {
-                const response = await axios.post('http://localhost:8081/api/employees/checkin', null, {
+                const response = await axios.post('http://localhost:8080/api/employees/checkin', null, {
                     params: { userId }
                 });
                 if (response.status === 200) {
@@ -100,7 +100,7 @@ const RightSidebar = () => {
             setErrorMessage('Bạn phải Check-in trước khi Check-out!');
         } else if (!checkOutTime && userId) {
             try {
-                const response = await axios.post('http://localhost:8081/api/employees/checkout', null, {
+                const response = await axios.post('http://localhost:8080/api/employees/checkout', null, {
                     params: { userId }
                 });
                 if (response.status === 200) {

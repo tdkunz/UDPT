@@ -35,4 +35,8 @@ public class PointController {
     public Point sendPoint(@RequestParam Long managerId, @RequestParam Long employeeId, @RequestParam Long points, @RequestParam String message) {
         return pointService.sendPoint(managerId, employeeId, points, message);
     }
+    @PostMapping("/redeem")
+    public Point redeemPoints(@RequestParam Long employeeId, @RequestParam Long points, @RequestParam String message) {
+        return pointService.redeemPoints(employeeId, points, message);
+    }
 }

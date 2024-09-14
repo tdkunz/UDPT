@@ -22,6 +22,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                     if (response.status === 200) {
                         setRequestData(response.data);
                         setRejectionReason(response.data.reasonReject);
+                        console.log('Request Data:', response.data);
                     } else {
                         console.error("Error fetching user data");
                     }
@@ -42,6 +43,24 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
     const handleSubmit = async (event) => {
         setAccept("Chấp thuận");
         try {
+            if (requestData.requestType === "Update") {
+                // Call the /update-checkin-checkout API
+                const updateResponse = await axios.put('http://localhost:8081/api/employees/update-checkin-checkout', null, {
+                    params: {
+                        userId: requestData.employeeId,
+                        checkIn: requestData.timeStart,
+                        checkOut: requestData.timeEnd,
+                        day: requestData.day
+                    }
+                });
+                console.log('Update Response:', updateResponse.data);
+                if (updateResponse.status !== 200) {
+                    const message = updateResponse.data.message || 'An error occurred while updating worktime';
+                    alert(message);
+                    return;
+                }
+            }
+
             // API cập nhật trường Status của request thành "Chấp thuận"
             const response = await axios.put(`http://localhost:8082/api/requests/${id}/approve`, null, {
                 params: {
@@ -174,7 +193,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                         </>
                         ) : (
                         <>
-                            <Form.Group className="mb-3 d-none w-25">
+                            <Form.Group className="mb-3 w-25">
                                 <Form.Label>Ngày:</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -184,7 +203,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                                     style={{ backgroundColor: '#fff', color: '#000' }}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3 d-none w-25">
+                            <Form.Group className="mb-3 w-25">
                                 <Form.Label>Bắt đầu:</Form.Label>
                                 <Form.Control
                                     type="text"
@@ -194,7 +213,7 @@ export function RequestDetail({show, id, handleClose, handleConfirm}) {
                                     style={{ backgroundColor: '#fff', color: '#000' }}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3 d-none w-25">
+                            <Form.Group className="mb-3 w-25">
                                 <Form.Label>Kết thúc:</Form.Label>
                                 <Form.Control
                                     type="text"

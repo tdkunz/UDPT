@@ -62,6 +62,7 @@ public class RequestService {
     public List<Request> getLeaveRequests() {
         return requestRepository.findByRequestType("Leave");
     }
+
     public List<Request> getUpdateTimeSheetRequests() {
         return requestRepository.findByRequestType("Update");
     }

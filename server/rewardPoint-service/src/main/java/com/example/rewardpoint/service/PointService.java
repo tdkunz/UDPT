@@ -54,7 +54,6 @@ public class PointService {
             logger.info("Updated totalPoint for uid {}: {}", point.getUid(), point.getTotalPoint());
         }
     }
-/**/
 
     @Transactional
     public Point sendPoint(Long managerId, Long employeeId, Long points, String message) {
@@ -99,6 +98,33 @@ public class PointService {
             return pointRepository.save(employee);
         }
         return null;
+    }
+
+    @Transactional
+    public Point redeemPoints(Long employeeId, Long points, String message) {
+        Optional<Point> employeeOptional = pointRepository.findByUid(employeeId);
+
+        if (employeeOptional.isPresent()) {
+            Point employee = employeeOptional.get();
+
+            if (employee.getTotalPoint() < points) {
+                throw new IllegalArgumentException("Not enough points to redeem.");
+            }
+
+            // Deduct points from employee
+            employee.setTotalPoint(employee.getTotalPoint() - points);
+
+            // Create history point for employee
+            HistoryPoint historyPoint = new HistoryPoint();
+            historyPoint.setId(new ObjectId());
+            historyPoint.setPointsSent(points);
+            historyPoint.setDateSent(new Date());
+            historyPoint.setMessage(message);
+            employee.getHistoryPoints().add(historyPoint);
+
+            return pointRepository.save(employee);
+        }
+        throw new IllegalArgumentException("Employee not found.");
     }
 
 }

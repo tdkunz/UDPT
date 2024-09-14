@@ -19,6 +19,7 @@ import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -125,6 +126,27 @@ public class EmployeeService {
         worktime.setTimeEnd(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
         worktimeRepository.save(worktime);
         return "Check-out successful";
+    }
+
+
+    public String updateCheckInCheckOut(Long userId, String day, String checkIn, String checkOut) {
+        Worktime worktime = worktimeRepository.findByUserIdAndDay(userId, day)
+                .orElseGet(() -> {
+                    Worktime newWorktime = new Worktime();
+                    newWorktime.setUser(userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found")));
+                    newWorktime.setDay(day);
+                    return newWorktime;
+                });
+
+        try {
+            worktime.setTimeStart(LocalTime.parse(checkIn, DateTimeFormatter.ofPattern("HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+            worktime.setTimeEnd(LocalTime.parse(checkOut, DateTimeFormatter.ofPattern("HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Invalid time format. Please use HH:mm:ss format.");
+        }
+
+        worktimeRepository.save(worktime);
+        return "Check-in and check-out times updated successfully";
     }
 
     public List<EmployeeDTO> getAllEmployees() {

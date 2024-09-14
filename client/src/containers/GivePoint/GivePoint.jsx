@@ -35,8 +35,8 @@ const GivePoint = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const employeeResponse = await axios.get(`http://localhost:8081/api/employees`);
-                const pointResponse = await axios.get(`http://localhost:8084/api/points`);
+                const employeeResponse = await axios.get(`http://localhost:8080/api/employees`);
+                const pointResponse = await axios.get(`http://localhost:8080/api/points`);
                 const loggedInUserId = localStorage.getItem('userid');
 
                 if (employeeResponse.status === 200 && pointResponse.status === 200) {
@@ -71,7 +71,7 @@ const GivePoint = () => {
         const { id: employeeId } = curEmp;
 
         try {
-            const response = await axios.post(`http://localhost:8084/api/points/send`, null, {
+            const response = await axios.post(`http://localhost:8080/api/points/send`, null, {
                 params: {
                     managerId,
                     employeeId,

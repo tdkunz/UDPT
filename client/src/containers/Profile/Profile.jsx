@@ -8,6 +8,7 @@ import './Profile.scss';
 const Profile = () => {
   const [employee, setEmployee] = useState({});
   const [point, setPoint] = useState({});
+  const [vouchers, setVouchers] = useState([]);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -18,7 +19,7 @@ const Profile = () => {
 
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/employees/${employeeId}`);
+        const response = await axios.get(`http://localhost:8080/api/employees/${employeeId}`);
         setEmployee(response.data);
       } catch (error) {
         console.error('Error fetching employee data:', error);
@@ -27,15 +28,29 @@ const Profile = () => {
 
     const fetchPoint = async () => {
       try {
-        const response = await axios.get(`http://localhost:8084/api/points/${employeeId}`);
+        const response = await axios.get(`http://localhost:8080/api/points/${employeeId}`);
         setPoint(response.data);
       } catch (error) {
         console.error('Error fetching point data:', error);
       }
     };
 
+    const fetchVouchers = async () => {
+      try {
+        const response = await axios.get(`https://university-of-science.sandbox.vouchery.app/api/v2.1/customers/${employeeId}/vouchers`, {
+          headers: {
+            'Authorization': `Bearer 44ea1ba880c3d4df6a9954bfb44644177b6efdc2b605151d5ca64696f7d365c2`
+          }
+        });
+        setVouchers(response.data);
+      } catch (error) {
+        console.error('Error fetching vouchers:', error);
+      }
+    };
+
     fetchEmployee();
     fetchPoint();
+    fetchVouchers();
   }, []);
 
   return (
@@ -53,12 +68,12 @@ const Profile = () => {
                 <h5> Điểm </h5>
                 <h4>{point.totalPoint}</h4>
 
-                <div className="col">
-                  <button type="button" className="btn btn-danger">Đổi điểm</button>
-                </div>
+                {/*<div className="col">*/}
+                {/*  <button type="button" className="btn btn-danger">Đổi điểm</button>*/}
+                {/*</div>*/}
                 <div className="col-6">
                   <Button variant="primary" onClick={handleShow}>
-                    Lịch sử nhận điểm
+                    {localStorage.getItem('role') === 'Manager' ? 'Lịch sử cho điểm' : 'Lịch sử nhận điểm'}
                   </Button>
                 </div>
                 {localStorage.getItem('role') === 'Manager' ? (
@@ -104,35 +119,33 @@ const Profile = () => {
                   </tbody>
                 </table>
               </div>
-
             </div>
           </div>
+
           <div className="voucher-history">
-            <h5>Lịch sử đổi voucher</h5>
-            <hr></hr>
-            <table class="table table-hover voucher-table">
+            <h5>Danh sách voucher đã đổi</h5>
+            <hr />
+            <table className="table table-hover voucher-table">
               <thead>
-                  <tr>
-                  <th scope="col">Tên Voucher</th>
-                  <th scope="col">Mã Voucher</th>
-                  <th scope="col">Nội dung</th>
-                  <th scope="col">Ngày hết hạn</th>
-                  <th scope="col">Point</th>
-                  
-                  </tr>
+              <tr>
+                <th scope="col">Tên Voucher</th>
+                <th scope="col">Mã Voucher</th>
+                <th scope="col">Nội dung</th>
+                <th scope="col">Ngày hết hạn</th>
+              </tr>
               </thead>
               <tbody>
-                  <tr>
-                      <td><b>Voucher 1</b></td>
-                      <td><i>ABCXYZ</i></td>
-                      <td>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />Voluptas nulla beatae nihil aut fugit, obcaecati, unde saepe, rerum incidunt<br /> inventore illo pariatur natus deserunt error magni? Fuga rerum ea reiciendis?</td>
-                      <td>1/1/1970</td>
-                      <td class="point">123</td>
+              {vouchers.map(voucher => (
+                  <tr key={voucher.id}>
+                    <td><b>{voucher.campaign.name}</b></td>
+                    <td><i>{voucher.code}</i></td>
+                    <td>{voucher.campaign.description}</td>
+                    <td>{voucher.expires_at ? new Date(voucher.expires_at).toLocaleDateString() : 'N/A'}</td>
                   </tr>
-              
+              ))}
               </tbody>
             </table>
-              </div>
+          </div>
         </div>
         <Footer />
         <Modal show={show} onHide={handleClose}>

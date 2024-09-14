@@ -102,7 +102,7 @@ const WorkFromHome = () => {
     console.log("WFH Info: ", wfhInfo);
     // API gửi request
     try {
-      const response = await axios.post(`http://localhost:8082/api/requests`, wfhInfo);
+      const response = await axios.post(`http://localhost:8080/api/requests`, wfhInfo);
       console.log('Response:', response.data);
       if (response.status === 200) {
           alert('Gửi yêu cầu thành công');
