@@ -90,7 +90,7 @@ const Activities = () => {
 
     const fetchAthleteData = async () => {
       try {
-        const response = await fetch('https://www.strava.com/api/v3/athlete/activities', {
+        const response = await fetch('https://www.strava.com/api/v3//clubs/1278939/activities', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -119,14 +119,14 @@ const Activities = () => {
             {activityList.map((item) => (
               <div className='activity-card' key={item.id}>
                 <div className='d-flex align-items justify-content-between px-2 py-2 border-bottom border-dark'>
-                  <span className="card-title">Phan Thanh Minh</span>
-                  <span className="card-title">{item.name}</span>
+                  {/*<span className="card-title">Phan Thanh Minh</span>*/}
+                  <span className="card-title"> {item.athlete.lastname} {item.athlete.firstname}</span>
                 </div>
                 <div className='activity-detail'>
-                  <div className='activity-info'>
-                    <h6>Date: </h6>
-                    <span>{item.start_date.split('T')[0]}</span>
-                  </div>
+                  {/*<div className='activity-info'>*/}
+                  {/*  <h6>Date: </h6>*/}
+                  {/*  <span>{item.start_date.split('T')[0]}</span>*/}
+                  {/*</div>*/}
                   <div className='activity-info'>
                     <h6>Distance: </h6>
                     <span>{item.distance} meters</span>
@@ -139,14 +139,7 @@ const Activities = () => {
                     <h6>Elevation: </h6>
                     <span>{item.total_elevation_gain} seconds</span>
                   </div>
-                  <div className='activity-info'>
-                    <h6>Average speed: </h6>
-                    <span>{item.average_speed} m/s</span>
-                  </div>
-                  <div className='activity-info'>
-                    <h6>Max speed: </h6>
-                    <span>{item.max_speed} m/s</span>
-                  </div>
+
                   <div className='activity-info'>
                     <h6>Elapsed time: </h6>
                     <span>{item.elapsed_time} seconds</span>
